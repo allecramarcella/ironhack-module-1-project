@@ -111,10 +111,9 @@ class Game {
     constructor(){
         this.gameBoard = new GameBoard()
         // this.background = new Background()
-        this.shuffledIronhackersImgArr 
         this.randomIronhackers = []
         this.ironhackers = []
-        this.test
+        this.randomImg
         this.levels = 0
         this.lives = 6
     }
@@ -145,48 +144,30 @@ class Game {
 
         requestAnimationFrame(this.gameLoop.bind(this))
     }
-
-    // shuffleIronhackersImgArray(array) {
-    //     for (let i = array.length -1 ; i >= 0; i--) {
-    //         let j = Math.floor(Math.random() * (i + 1));
-    //         let temp = array[i];
-    //         array[i] = array[j];
-    //         array[j] = temp;
-            
-    //     }
-    //     return this.shuffledIronhackersImgArr = array
-    // }
-
-    random() {
-        let randomIronhackImg = ironhackersImgArray[Math.round(Math.random()*ironhackersImgArray.length)];
-        return randomIronhackImg
-    }
-    test1() {
-        this.random()
-        if(!this.randomIronhackers.includes(this.random())) {
-            this.randomIronhackers.push(this.random())
-            console.log(this.randomIronhackers)
-            this.test = this.random()
-            console.log(this.test)
-        } else {
-            this.random()
-        }
-    }
   
-
-    addIronhacker() {
-        this.test1()
-        // } else if(randomIronhackImg.length > 6 ){
-        //     this.randomIronhackers = []
-        //     console.log(`yep, ${this.randomIronhackers}`)
-        //     this.test = randomIronhackImg
-        //     console.log(`yep, ${this.test}`)
-        // }
-       
+    randomizeIronhackerImg(){
+        for (let i = 0; i < ironhackersImgArray.length; i++ ){
+            let randomIronhackImg = ironhackersImgArray[Math.floor(Math.random()*ironhackersImgArray.length)];
+            if(!this.randomIronhackers.includes(randomIronhackImg) && this.randomIronhackers.length < 6) {
+                this.randomIronhackers.push(randomIronhackImg)
+                console.log(this.randomIronhackers)
+                this.randomImg = randomIronhackImg
+                console.log(this.randomImg)
+                break
+            } else if(this.randomIronhackers.includes(randomIronhackImg) && this.randomIronhackers.length < 6) {
+                continue
+            } else if(this.randomIronhackers.length = 6) {
+                this.randomIronhackers.splice(0,this.randomIronhackers.length)
+            }
+        }
+    }   
+    
+    addIronhacker(){
+        this.randomizeIronhackerImg()
         
         const randomSpeed = 1 + (Math.random() * 1)
         const randomX =  30 + (Math.random() * (window.innerWidth - 310))
-        this.newIronhacker = new Ironhacker(this.test, true, randomX, 0, randomSpeed, 250, 141)
+        this.newIronhacker = new Ironhacker(this.randomImg, true, randomX, 0, randomSpeed, 250, 141)
         
         this.ironhackers.push(this.newIronhacker)  
     }
