@@ -121,7 +121,7 @@ class Game {
 
     start() {
         this.gameBoard.initialise()
-        this.addListeners()
+        // this.addListeners()
 
         requestAnimationFrame(this.gameLoop.bind(this))
 
@@ -157,40 +157,43 @@ class Game {
     //     return this.shuffledIronhackersImgArr = array
     // }
 
-    addIronhacker(){
-        // this.shuffleIronhackersImgArray(ironhackersImgArray)
-        // // let randomIronhacker 
-        // this.shuffledIronhackersImgArr.forEach(shuffledIronhacker => {
-        //     if(this.randomIronhackers.includes(shuffledIronhacker) === false) {
-        //         this.randomIronhackers.push(shuffledIronhacker)
-        //     }
-        // })
-    
-        const randomIronhackImg = ironhackersImgArray[Math.floor(Math.random()*ironhackersImgArray.length)];
+    random() {
+        let randomIronhackImg = ironhackersImgArray[Math.round(Math.random()*ironhackersImgArray.length)];
+        return randomIronhackImg
+    }
+    test1() {
+        this.random()
+        if(!this.randomIronhackers.includes(this.random())) {
+            this.randomIronhackers.push(this.random())
+            console.log(this.randomIronhackers)
+            this.test = this.random()
+            console.log(this.test)
+        } else {
+            this.random()
+        }
+    }
+  
 
-        // if(!this.randomIronhackers.includes(randomIronhackImg)) {
-        //     this.randomIronhackers.push(randomIronhackImg)
-        // } else
-
-        // this.randomIronhackers.forEach(person => {
-        //     console.log(person)
-        //     const randomSpeed = 1 + (Math.random() * 1)
-        //     const randomX =  30 + (Math.random() * (window.innerWidth - 310))
-        //     const newIronhacker = new Ironhacker(person, true, randomX, 0, randomSpeed, 250, 141)
-        // })
-
-
+    addIronhacker() {
+        this.test1()
+        // } else if(randomIronhackImg.length > 6 ){
+        //     this.randomIronhackers = []
+        //     console.log(`yep, ${this.randomIronhackers}`)
+        //     this.test = randomIronhackImg
+        //     console.log(`yep, ${this.test}`)
+        // }
+       
         
         const randomSpeed = 1 + (Math.random() * 1)
         const randomX =  30 + (Math.random() * (window.innerWidth - 310))
-        this.newIronhacker = new Ironhacker(randomIronhackImg, true, randomX, 0, randomSpeed, 250, 141)
+        this.newIronhacker = new Ironhacker(this.test, true, randomX, 0, randomSpeed, 250, 141)
         
         this.ironhackers.push(this.newIronhacker)  
     }
 
     // subtractLives(
     //     if(img not clicked) {
-    //         this.lives -= 1
+    //         this.lives -= 1s
     //     } 
 
     //     if(teachers clicked){
@@ -202,7 +205,7 @@ class Game {
     //     this.levels += 1
     // }
 
-    livesUpdate(ctx){
+    livesUpdate(ctx) {
         ctx.fillStyle ='pink'
         ctx.font = '3vw Early_gameboyregular'
         ctx.fillText(`Lives: ${this.lives}`, 30, 50)
