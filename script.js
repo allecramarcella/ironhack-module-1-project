@@ -86,7 +86,8 @@ class GameBoard {
 // }
 
 class Ironhacker {
-    constructor(isStudent, x, y, speed, width, height){
+    constructor(img, isStudent, x, y, speed, width, height){
+        this.img = img
         this.isStudent = isStudent
         this.x = x
         this.y = y
@@ -99,12 +100,22 @@ class Ironhacker {
         this.y += this.speed
     }
 
+    // shuffleArray(array) {
+    //     for (let i = array.length - 1; i > 0; i--) {
+    //         let j = Math.floor(Math.random() * (i + 1));
+    //         let temp = array[i];
+    //         array[i] = array[j];
+    //         array[j] = temp;
+    //     }
+    // }
+
     draw(ctx){
         let x = this.x
         let y = this.y
         let width = this.width
         let height = this.height
-        ctx.drawImage(randomIronhackerImg.image, x, y, width, height)
+        let img = this.img 
+        ctx.drawImage(img, x, y, width, height)
     }
 }
 
@@ -112,6 +123,7 @@ class Game {
     constructor(){
         this.gameBoard = new GameBoard()
         // this.background = new Background()
+        this.shuffledIronhackersImgArr 
         this.ironhackers = []
         this.levels = 0
         this.lives = 6
@@ -120,6 +132,7 @@ class Game {
     start() {
         this.gameBoard.initialise()
         // this.addListeners()
+
         requestAnimationFrame(this.gameLoop.bind(this))
 
         window.setInterval(this.addIronhacker.bind(this), 2000)
@@ -143,14 +156,36 @@ class Game {
         requestAnimationFrame(this.gameLoop.bind(this))
     }
 
+    shuffleIronhackersImgArray(array) {
+        for (let i = array.length -1 ; i >= 0; i--) {
+            let j = Math.floor(Math.random() * (i + 1));
+            let temp = array[i];
+            array[i] = array[j];
+            array[j] = temp;
+            
+        }
+        return this.shuffledIronhackersImgArr = array
+    }
+
     addIronhacker(){
+        this.shuffleIronhackersImgArray(ironhackersImgArray)
+        console.log(this.shuffledIronhackersImgArr[0])
+        console.log(this.shuffledIronhackersImgArr[1])
+        console.log(this.shuffledIronhackersImgArr[2])
+        console.log(this.shuffledIronhackersImgArr[3])
+        console.log(this.shuffledIronhackersImgArr[4])
+        console.log(this.shuffledIronhackersImgArr[5])
+
+        let randomIronhacker 
+        this.shuffledIronhackersImgArr.forEach(shuffledIronhacker => {
+            return randomIronhacker = shuffledIronhacker 
+        })
+    
         const randomSpeed = 1 + (Math.random() * 1)
         const randomX =  30 + (Math.random() * (window.innerWidth - 310))
-        const newIronhacker = new Ironhacker(true, randomX, 0, randomSpeed, 250, 141)
-        console.log(randomX)
-
+        const newIronhacker = new Ironhacker(randomIronhacker, true, randomX, 0, randomSpeed, 250, 141)
+        
         this.ironhackers.push(newIronhacker)
-        console.log(this.ironhackers)
     }
 
     // subtractLives(
