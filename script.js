@@ -112,6 +112,7 @@ class Game {
         this.gameBoard = new GameBoard()
         // this.background = new Background()
         this.randomIronhackers = []
+        this.shuffledIronhackersImgArr
         this.ironhackers = []
         this.randomImg
         this.levels = 0
@@ -130,6 +131,7 @@ class Game {
     gameLoop(){
         const ctx = this.gameBoard.ctx
         ctx.clearRect(0, 0, canvas.width, canvas.height)
+        this.addListeners()
 
         // this.background.moveBackground()
         // this.background.drawBackground(backgroundImg, 0, 0, -1, window.innerWidth, window.innerHeight)
@@ -144,26 +146,53 @@ class Game {
 
         requestAnimationFrame(this.gameLoop.bind(this))
     }
+
+    shuffleIronhackersImgArray(array) {
+        for (let i = array.length -1 ; i >= 0; i--) {
+            let j = Math.floor(Math.random() * (i + 1));
+            let temp = array[i];
+            array[i] = array[j];
+            array[j] = temp;
+        }
+        return this.shuffledIronhackersImgArr = array
+    }
   
-    randomizeIronhackerImg(){
-        for (let i = 0; i < ironhackersImgArray.length; i++ ){
-            let randomIronhackImg = ironhackersImgArray[Math.floor(Math.random()*ironhackersImgArray.length)];
-            if(!this.randomIronhackers.includes(randomIronhackImg) && this.randomIronhackers.length < 6) {
-                this.randomIronhackers.push(randomIronhackImg)
-                console.log(this.randomIronhackers)
-                this.randomImg = randomIronhackImg
-                console.log(this.randomImg)
+    // randomizeIronhackerImg(){
+    //     for (let i = 0; i < ironhackersImgArray.length; i++ ){
+    //         let randomIronhackImg = ironhackersImgArray[Math.floor(Math.random()*ironhackersImgArray.length)];
+            // if(!this.randomIronhackers.includes(randomIronhackImg) && this.randomIronhackers.length < 6) {
+            //     this.randomIronhackers.push(randomIronhackImg)
+            //     console.log(this.randomIronhackers)
+            //     this.randomImg = randomIronhackImg
+            //     console.log(this.randomImg)
+            //     break
+            // } else if(this.randomIronhackers.includes(randomIronhackImg) && this.randomIronhackers.length < 6) {
+            //     continue
+            // } else if(this.randomIronhackers.length = 6) {
+            //     this.randomIronhackers.splice(0,this.randomIronhackers.length)
+            // }
+    //     }
+    // }   
+
+    
+    
+    addIronhacker(){
+        this.shuffleIronhackersImgArray(ironhackersImgArray)
+        
+        for(let i= 0; i < this.shuffledIronhackersImgArr.length; i++) {
+            if(!this.randomIronhackers.includes(this.shuffledIronhackersImgArr[i]) && this.randomIronhackers.length < 6) {
+                this.randomIronhackers.push(this.shuffledIronhackersImgArr[i])
+                // console.log(this.randomIronhackers)
+                this.randomImg = this.shuffledIronhackersImgArr[i]
+                // console.log(this.randomImg)
                 break
-            } else if(this.randomIronhackers.includes(randomIronhackImg) && this.randomIronhackers.length < 6) {
+            } else if(this.randomIronhackers.includes(this.shuffledIronhackersImgArr[i]) && this.randomIronhackers.length < 6) {
                 continue
             } else if(this.randomIronhackers.length = 6) {
                 this.randomIronhackers.splice(0,this.randomIronhackers.length)
             }
         }
-    }   
-    
-    addIronhacker(){
-        this.randomizeIronhackerImg()
+
         
         const randomSpeed = 1 + (Math.random() * 1)
         const randomX =  30 + (Math.random() * (window.innerWidth - 310))
@@ -198,17 +227,46 @@ class Game {
         ctx.fillText(`Level: ${this.levels}`, window.innerWidth - 280, 50)
     }
     
-    // addListeners() {
-       
-    //     let img = this.test
-    //     img.addEventListener('click', this.changeImg)       
+    addListeners() {
+        const canvas = document.getElementById('canvas')
+        const canvasLeft = canvas.offsetLeft + canvas.clientLeft
+        const canvasTop = canvas.offsetTop + canvas.clientTop
+        const context = canvas.getContext('2d')
+        const imgOnscreen = []
+        this.ironhackers.forEach(element =>{
+            imgOnscreen.push(element)
+        })
+        console.log(imgOnscreen)
+
+        canvas.addEventListener('click', function(event) {
+            const x = event.pageX - canvasLeft
+            const y = event.pageY - canvasTop;
+        
+            // Collision detection between clicked offset and element.
+            imgOnscreen.forEach(function(ironhacker) {
+                console.log('kittie kattie')
+                if (y > ironhacker.y && y < ironhacker.y + ironhacker.height 
+                    && x > ironhacker.x && x < ironhacker.x + ironhacker.width) {
+                    console.log('i have been clicked!!');
+                }
+            });
+        
+        }, false);
+    }
+
+
+    // clickFunction(ironhacker){
+    //     ironhacker.forEach(ironhacker => {
+    //         const imgX = ironhacker.x
+    //         const imgY = ironhacker.y
+    //         const imgSurface= ironhacker.width * ironhacker.height
+
+
+
+    //     })
     // }
 
-    // changeImg(){
-      
-    //     console.log(`hello, ${this.test}`)
-
-    // }
+   
 }
 
 const game = new Game()
