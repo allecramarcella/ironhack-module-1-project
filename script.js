@@ -63,7 +63,7 @@ jorgClicked.src = './images/jorg clicked.png'
 class GameBoard {
     constructor() {
         this.width = canvas.width
-        this.height = canvas.heigth
+        this.height = canvas.height
     }
 
     resizeCanvas(){
@@ -136,26 +136,54 @@ class Ironhacker {
     }
 }
 
+class Counter {
+    constructor(){
+        this.students =0
+        this.levels = 0
+        this.lives = 6
+    }
+
+    addLevels() {
+        this.students += 1
+        if(this.students % 6 === 0) {
+            this.levels += 1
+        }
+    
+    }
+
+    drawLivesCounter(ctx) {
+        ctx.fillStyle = 'pink'
+        ctx.font = '22px Early_gameboyregular'
+        ctx.fillText(`Lives: ${this.lives}`, 30, 50)
+    }
+
+    drawLevelCounter(ctx){
+        // const ctx = this.gameBoard.ctx
+        // console.log(this.levels)
+        ctx.fillStyle = 'yellow'
+        ctx.font = '22px Early_gameboyregular'
+        ctx.fillText(`Level: ${this.levels}`, window.innerWidth - 200, 50)
+    }
+}
+
 class Game {
     constructor(){
         this.gameBoard = new GameBoard()
+        this.counterLevels = new Counter()
         // this.background = new Background()
         this.randomIronhackers = []
         this.shuffledIronhackersImgArr
         this.ironhackers = []
         this.randomTeacherImg
         this.randomImg
-        this.levels = 0
-        this.lives = 6
     }
 
     start() {
+       
         this.gameBoard.initialise()
-        // this.addListeners()
 
         requestAnimationFrame(this.gameLoop.bind(this))
-
-        window.setInterval(this.addIronhacker.bind(this), 2000)
+        window.setInterval(this.addIronhacker.bind(this), 2500)
     }
 
     gameLoop(){
@@ -171,8 +199,7 @@ class Game {
             ironhacker.move()
         })
 
-        this.livesUpdate(ctx)
-        this.levelsUpdate(ctx)
+        this.updateLeves(ctx)
 
         requestAnimationFrame(this.gameLoop.bind(this))
     }
@@ -187,23 +214,6 @@ class Game {
         return this.shuffledIronhackersImgArr = array
     }
   
-    // randomizeIronhackerImg(){
-    //     for (let i = 0; i < ironhackersImgArray.length; i++ ){
-    //         let randomIronhackImg = ironhackersImgArray[Math.floor(Math.random()*ironhackersImgArray.length)];
-            // if(!this.randomIronhackers.includes(randomIronhackImg) && this.randomIronhackers.length < 6) {
-            //     this.randomIronhackers.push(randomIronhackImg)
-            //     console.log(this.randomIronhackers)
-            //     this.randomImg = randomIronhackImg
-            //     console.log(this.randomImg)
-            //     break
-            // } else if(this.randomIronhackers.includes(randomIronhackImg) && this.randomIronhackers.length < 6) {
-            //     continue
-            // } else if(this.randomIronhackers.length = 6) {
-            //     this.randomIronhackers.splice(0,this.randomIronhackers.length)
-            // }
-    //     }
-    // }   
-    
     
     addIronhacker(){
         this.shuffleIronhackersImgArray(ironhackersImgArray)
@@ -217,31 +227,47 @@ class Game {
                 break
             } else if(this.randomIronhackers.includes(this.shuffledIronhackersImgArr[i]) && this.randomIronhackers.length < this.shuffledIronhackersImgArr.length) {
                 continue
-            } else if(this.randomIronhackers.length = 6) {
+            } else if(this.randomIronhackers.length === this.shuffledIronhackersImgArr.length) {
                 this.randomIronhackers.splice(0,this.randomIronhackers.length)
             }
         }
-
         
         const randomSpeed = 1 + (Math.random() * 1)
         const randomX =  30 + (Math.random() * (window.innerWidth - 310))
         this.newIronhacker = new Ironhacker(this.randomImg, true, randomX, 0, randomSpeed, 250, 141)
         
         this.ironhackers.push(this.newIronhacker)  
+        this.addTeachers()
+        
     }
 
     addTeachers(){
-        const randomNumber = 0 + Math.floor(Math.random() * 4)
-        if(randomNumber === 4) {
+        const randomNumber = 0 + Math.floor(Math.random() * 10)
+        if(randomNumber === 5) {
 
+            this.shuffleIronhackersImgArray(teachersImgArray)
 
-            const randomSpeed = 1 + (Math.random() * 1)
+            this.randomImg = this.shuffledIronhackersImgArr[0]
+
+            const randomSpeed = 1 + (Math.random() * 3)
             const randomX =  30 + (Math.random() * (window.innerWidth - 310))
             this.newIronhacker = new Ironhacker(this.randomImg, false, randomX, 0, randomSpeed, 250, 141)
         
             this.ironhackers.push(this.newIronhacker)  
         } 
     }
+
+    // updateLeves(ctx){
+    //     console.log(this.ironhackers)
+    //     this.counterLevels.drawLevelCounter(ctx)
+    //     if(this.ironhackers.length === 6) {
+    //         this.counterLevels.addLevels()
+    //     } else if (this.ironhackers.length === 12) {
+    //         this.counterLevels.addLevels()
+    //     } else if (this.ironhackers.length === 18) {
+    //         this.counterLevels.addLevels()
+    //     }
+    // }
 
     // subtractLives(
     //     if(img not clicked) {
@@ -253,27 +279,24 @@ class Game {
     //     }
     // )
 
-    // addLevels() {
-    //     this.levels += 1
-    // }
+    updateLeves(ctx){
+        this.counterLevels.drawLevelCounter(ctx)
 
-    livesUpdate(ctx) {
-        ctx.fillStyle ='pink'
-        ctx.font = '22px Early_gameboyregular'
-        ctx.fillText(`Lives: ${this.lives}`, 30, 50)
+        this.ironhackers.forEach((element, index) => {
+            if(element.y > window.innerHeight -100) {
+                this.counterLevels.addLevels()
+                this.counterLevels.drawLevelCounter(ctx)
+                this.ironhackers.splice(index, 1)
+            }
+        })
     }
-
-    levelsUpdate(ctx){
-        ctx.fillStyle ='yellow'
-        ctx.font = '22px Early_gameboyregular'
-        ctx.fillText(`Level: ${this.levels}`, window.innerWidth - 200, 50)
-    }
+    
     
     addListeners() {
         const canvas = document.getElementById('canvas')
         const canvasLeft = canvas.offsetLeft + canvas.clientLeft
         const canvasTop = canvas.offsetTop + canvas.clientTop
-        const context = canvas.getContext('2d')
+  
         const imgOnscreen = []
         this.ironhackers.forEach(element =>{
             imgOnscreen.push(element)
