@@ -148,7 +148,15 @@ class Counter {
         if(this.students % 6 === 0) {
             this.levels += 1
         }
-    
+    }
+
+    subtractLives(isStudent){
+        if(isStudent === true) {
+            this.lives -= 1
+        } else {
+            this.lives -= 2
+        }
+        
     }
 
     drawLivesCounter(ctx) {
@@ -170,10 +178,12 @@ class Game {
     constructor(){
         this.gameBoard = new GameBoard()
         this.counterLevels = new Counter()
+        this.counterLives = new Counter()
         // this.background = new Background()
         this.randomIronhackers = []
         this.shuffledIronhackersImgArr
         this.ironhackers = []
+        this.clickedIronhackers = []
         this.randomTeacherImg
         this.randomImg
     }
@@ -196,10 +206,11 @@ class Game {
 
         this.ironhackers.forEach(ironhacker => {
             ironhacker.draw(ctx)
-            ironhacker.move()
+            ironhacker.move() 
         })
 
         this.updateLeves(ctx)
+        this.updateLives(ctx)
 
         requestAnimationFrame(this.gameLoop.bind(this))
     }
@@ -257,17 +268,6 @@ class Game {
         } 
     }
 
-    // updateLeves(ctx){
-    //     console.log(this.ironhackers)
-    //     this.counterLevels.drawLevelCounter(ctx)
-    //     if(this.ironhackers.length === 6) {
-    //         this.counterLevels.addLevels()
-    //     } else if (this.ironhackers.length === 12) {
-    //         this.counterLevels.addLevels()
-    //     } else if (this.ironhackers.length === 18) {
-    //         this.counterLevels.addLevels()
-    //     }
-    // }
 
     // subtractLives(
     //     if(img not clicked) {
@@ -286,6 +286,30 @@ class Game {
             if(element.y > window.innerHeight -100) {
                 this.counterLevels.addLevels()
                 this.counterLevels.drawLevelCounter(ctx)
+                this.ironhackers.splice(index, 1)
+            }
+        })
+    }
+
+    updateLives(ctx){
+        this.counterLives.drawLivesCounter(ctx)
+        
+        const clickedImgOnScreen = []
+
+        this.ironhackers.forEach(element => {
+            clickedImgOnScreen.push(element)
+        })
+
+       
+        clickedImgOnScreen.forEach((element, index) => {
+        
+            if(element.y > window.innerHeight - 125 && element.img.src.indexOf('clicked') <= 0 && element.isStudent === true) {
+                this.counterLives.subtractLives(true)
+                this.counterLives.drawLivesCounter(ctx)
+                this.ironhackers.splice(index, 1)
+            } else if (element.y > window.innerHeight - 125 && element.img.src.indexOf('clicked') >= 0 && element.isStudent === false) {
+                this.counterLives.subtractLives(false)
+                this.counterLives.drawLivesCounter(ctx)
                 this.ironhackers.splice(index, 1)
             }
         })
@@ -331,6 +355,8 @@ class Game {
                             break
                         case jorg: 
                             ironhacker.img = jorgClicked
+                            ironhacker.width += 75
+                            ironhacker.height += 75
                             break
                         case guido: 
                             ironhacker.img = guidoClicked
