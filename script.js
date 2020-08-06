@@ -17,14 +17,43 @@ mahmut.src = './images/Mahmut.png'
 const kenouly = new Image()
 kenouly.src = './images/Kenouly.png'
 
+const ironhackersImgArray = [marcella, yuka, lisette, anna, mahmut, kenouly]
+
+// images teachers
 const jorg = new Image()
 jorg.src = './images/Jorg.png'
 
 const guido = new Image()
 guido.src = './images/Guido.png'
 
-const ironhackersImgArray = [marcella, yuka, lisette, anna, mahmut, kenouly]
+const teachersImgArray = [guido, jorg]
 
+
+// clicked Images ironhackers
+const mahmutClicked = new Image()
+mahmutClicked.src = './images/Mahmut clicked.png'
+
+const annaClicked = new Image()
+annaClicked.src = './images/anna clicked.png'
+
+const kenoulyClicked = new Image()
+kenoulyClicked.src = './images/kenouly clicked.png'
+
+const marcellaClicked = new Image()
+marcellaClicked.src = './images/marcella clicked.png'
+
+const lisetteClicked = new Image()
+lisetteClicked.src = './images/Lisette clicked.png'
+
+const yukaClicked = new Image()
+yukaClicked.src = './images/yuka clicked.png'
+
+// clicked Images teachers
+const jorgClicked = new Image()
+jorgClicked.src = './images/jorg clicked.png'
+
+// const guidoClicked = new Image()
+// guidoClicked.src = 
 
 // //background img
 // const backgroundImg = new Image()
@@ -114,6 +143,7 @@ class Game {
         this.randomIronhackers = []
         this.shuffledIronhackersImgArr
         this.ironhackers = []
+        this.randomTeacherImg
         this.randomImg
         this.levels = 0
         this.lives = 6
@@ -173,20 +203,19 @@ class Game {
             // }
     //     }
     // }   
-
     
     
     addIronhacker(){
         this.shuffleIronhackersImgArray(ironhackersImgArray)
         
         for(let i= 0; i < this.shuffledIronhackersImgArr.length; i++) {
-            if(!this.randomIronhackers.includes(this.shuffledIronhackersImgArr[i]) && this.randomIronhackers.length < 6) {
+            if(!this.randomIronhackers.includes(this.shuffledIronhackersImgArr[i]) && this.randomIronhackers.length < this.shuffledIronhackersImgArr.length) {
                 this.randomIronhackers.push(this.shuffledIronhackersImgArr[i])
                 // console.log(this.randomIronhackers)
                 this.randomImg = this.shuffledIronhackersImgArr[i]
                 // console.log(this.randomImg)
                 break
-            } else if(this.randomIronhackers.includes(this.shuffledIronhackersImgArr[i]) && this.randomIronhackers.length < 6) {
+            } else if(this.randomIronhackers.includes(this.shuffledIronhackersImgArr[i]) && this.randomIronhackers.length < this.shuffledIronhackersImgArr.length) {
                 continue
             } else if(this.randomIronhackers.length = 6) {
                 this.randomIronhackers.splice(0,this.randomIronhackers.length)
@@ -199,6 +228,19 @@ class Game {
         this.newIronhacker = new Ironhacker(this.randomImg, true, randomX, 0, randomSpeed, 250, 141)
         
         this.ironhackers.push(this.newIronhacker)  
+    }
+
+    addTeachers(){
+        const randomNumber = 0 + Math.floor(Math.random() * 4)
+        if(randomNumber === 4) {
+
+
+            const randomSpeed = 1 + (Math.random() * 1)
+            const randomX =  30 + (Math.random() * (window.innerWidth - 310))
+            this.newIronhacker = new Ironhacker(this.randomImg, false, randomX, 0, randomSpeed, 250, 141)
+        
+            this.ironhackers.push(this.newIronhacker)  
+        } 
     }
 
     // subtractLives(
@@ -217,14 +259,14 @@ class Game {
 
     livesUpdate(ctx) {
         ctx.fillStyle ='pink'
-        ctx.font = '3vw Early_gameboyregular'
+        ctx.font = '22px Early_gameboyregular'
         ctx.fillText(`Lives: ${this.lives}`, 30, 50)
     }
 
     levelsUpdate(ctx){
         ctx.fillStyle ='yellow'
-        ctx.font = '3vw Early_gameboyregular'
-        ctx.fillText(`Level: ${this.levels}`, window.innerWidth - 280, 50)
+        ctx.font = '22px Early_gameboyregular'
+        ctx.fillText(`Level: ${this.levels}`, window.innerWidth - 200, 50)
     }
     
     addListeners() {
@@ -236,18 +278,41 @@ class Game {
         this.ironhackers.forEach(element =>{
             imgOnscreen.push(element)
         })
-        console.log(imgOnscreen)
+        // console.log(imgOnscreen)
 
         canvas.addEventListener('click', function(event) {
             const x = event.pageX - canvasLeft
             const y = event.pageY - canvasTop;
-        
-            // Collision detection between clicked offset and element.
+    
             imgOnscreen.forEach(function(ironhacker) {
-                console.log('kittie kattie')
                 if (y > ironhacker.y && y < ironhacker.y + ironhacker.height 
                     && x > ironhacker.x && x < ironhacker.x + ironhacker.width) {
-                    console.log('i have been clicked!!');
+                    switch(ironhacker.img) {
+                        case mahmut:
+                            ironhacker.img = mahmutClicked
+                            break;
+                        case yuka: 
+                            ironhacker.img = yukaClicked
+                            break
+                        case marcella: 
+                            ironhacker.img = marcellaClicked
+                            break
+                        case lisette: 
+                            ironhacker.img = lisetteClicked
+                            break
+                        case anna: 
+                            ironhacker.img = annaClicked
+                            break
+                        case kenouly: 
+                            ironhacker.img = kenoulyClicked
+                            break
+                        case jorg: 
+                            ironhacker.img = jorgClicked
+                            break
+                        case guido: 
+                            ironhacker.img = guidoClicked
+                            break
+                    }
                 }
             });
         
@@ -255,16 +320,9 @@ class Game {
     }
 
 
-    // clickFunction(ironhacker){
-    //     ironhacker.forEach(ironhacker => {
-    //         const imgX = ironhacker.x
-    //         const imgY = ironhacker.y
-    //         const imgSurface= ironhacker.width * ironhacker.height
+   changeImgAfterClick(){
 
-
-
-    //     })
-    // }
+   }
 
    
 }
