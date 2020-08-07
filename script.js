@@ -126,6 +126,10 @@ class Ironhacker {
         this.y += this.speed
     }
 
+    speedUp(){
+        this.speed += 10
+    }
+
     draw(ctx){
         let x = this.x
         let y = this.y
@@ -155,8 +159,7 @@ class Counter {
             this.lives -= 1
         } else {
             this.lives -= 2
-        }
-        
+        } 
     }
 
     drawLivesCounter(ctx) {
@@ -183,7 +186,7 @@ class Game {
         this.randomIronhackers = []
         this.shuffledIronhackersImgArr
         this.ironhackers = []
-        this.clickedIronhackers = []
+        this.ironhackersClicked = []
         this.randomTeacherImg
         this.randomImg
     }
@@ -211,6 +214,7 @@ class Game {
 
         this.updateLeves(ctx)
         this.updateLives(ctx)
+        this.moreSpeedEachLevel()
 
         requestAnimationFrame(this.gameLoop.bind(this))
     }
@@ -243,18 +247,45 @@ class Game {
             }
         }
         
+
+    //     let minGap = 50;
+    // let maxGap = 200;
+    // let gap = Math.floor(Math.random() * (maxGap - minGap + 1) + minGap);
+    // myObstacles.push(new Component(10, height, 'green', x, 0));
+    // myObstacles.push(new Component(10, x - height - gap, 'green', x, height + gap));
+
+
+
         const randomSpeed = 1 + (Math.random() * 1)
         const randomX =  30 + (Math.random() * (window.innerWidth - 310))
         this.newIronhacker = new Ironhacker(this.randomImg, true, randomX, 0, randomSpeed, 250, 141)
         
         this.ironhackers.push(this.newIronhacker)  
+        this.ironhackersClicked.push(this.newIronhacker)
         this.addTeachers()
         
     }
 
+    moreSpeedEachLevel (){
+        console.log(this.counterLevels.levels)
+        console.log(this.ironhackers.speed)
+        
+        switch(this.counterLevels.levels) {
+            case 1:
+                this.ironhackers.speedUp()
+                break;
+            case 2: 
+                this.ironhackers.speedUp()
+                break
+
+        }
+           
+        
+    }
+
     addTeachers(){
-        const randomNumber = 0 + Math.floor(Math.random() * 10)
-        if(randomNumber === 5) {
+        const randomNumber = 0 + Math.floor(Math.random() * 2)
+        if(randomNumber === 1) {
 
             this.shuffleIronhackersImgArray(teachersImgArray)
 
@@ -265,19 +296,10 @@ class Game {
             this.newIronhacker = new Ironhacker(this.randomImg, false, randomX, 0, randomSpeed, 250, 141)
         
             this.ironhackers.push(this.newIronhacker)  
+            this.ironhackersClicked.push(this.newIronhacker)
         } 
     }
 
-
-    // subtractLives(
-    //     if(img not clicked) {
-    //         this.lives -= 1s
-    //     } 
-
-    //     if(teachers clicked){
-    //         this.lives -= 2
-    //     }
-    // )
 
     updateLeves(ctx){
         this.counterLevels.drawLevelCounter(ctx)
@@ -293,10 +315,10 @@ class Game {
 
     updateLives(ctx){
         this.counterLives.drawLivesCounter(ctx)
+
         
         const clickedImgOnScreen = []
-
-        this.ironhackers.forEach(element => {
+        this.ironhackersClicked.forEach(element => {
             clickedImgOnScreen.push(element)
         })
 
@@ -306,11 +328,11 @@ class Game {
             if(element.y > window.innerHeight - 125 && element.img.src.indexOf('clicked') <= 0 && element.isStudent === true) {
                 this.counterLives.subtractLives(true)
                 this.counterLives.drawLivesCounter(ctx)
-                this.ironhackers.splice(index, 1)
+                this.ironhackersClicked.splice(index, 1)
             } else if (element.y > window.innerHeight - 125 && element.img.src.indexOf('clicked') >= 0 && element.isStudent === false) {
                 this.counterLives.subtractLives(false)
                 this.counterLives.drawLivesCounter(ctx)
-                this.ironhackers.splice(index, 1)
+                this.ironhackersClicked.splice(index, 1)
             }
         })
     }
@@ -334,6 +356,7 @@ class Game {
             imgOnscreen.forEach(function(ironhacker) {
                 if (y > ironhacker.y && y < ironhacker.y + ironhacker.height 
                     && x > ironhacker.x && x < ironhacker.x + ironhacker.width) {
+                    
                     switch(ironhacker.img) {
                         case mahmut:
                             ironhacker.img = mahmutClicked
@@ -355,23 +378,32 @@ class Game {
                             break
                         case jorg: 
                             ironhacker.img = jorgClicked
-                            ironhacker.width += 75
-                            ironhacker.height += 75
+                            img1secBigAfterClick()
                             break
                         case guido: 
                             ironhacker.img = guidoClicked
+                            img1secBigAfterClick()
                             break
                     }
+
+                    function img1secBigAfterClick() {
+                        ironhacker.x -= 60
+                        ironhacker.width += 120
+                        ironhacker.height += 120
+
+                        setTimeout(function(){
+                            ironhacker.x += 50
+                            ironhacker.width -= 100
+                            ironhacker.height -= 100
+                         }, 250)
+                    }
+
+                    
                 }
             });
         
         }, false);
     }
-
-
-   changeImgAfterClick(){
-
-   }
 
    
 }
