@@ -64,6 +64,13 @@ class GameBoard {
     constructor() {
         this.width = canvas.width
         this.height = canvas.height
+        this.x = (window.innerWidth / 2) - (window.innerWidth / 3)
+        this.y = ((window.innerHeight - 100) / 2 ) - (window.innerHeight / 3)
+        this.ctx
+        this.startScreenWidth = window.innerWidth / 2 + (window.innerWidth / 6)
+        this.startScreenHeight = ((window.innerHeight - 100) / 2) + ((window.innerHeight -100) / 6)
+
+        
     }
 
     resizeCanvas(){
@@ -78,12 +85,77 @@ class GameBoard {
         window.addEventListener('resize', this.resizeCanvas, false);
         this.setCtx(canvas)
         this.resizeCanvas()
-      }
+        this.drawTitle()
+        this.drawLongText()
+    }
     
-      setCtx(canvas) {
+    setCtx(canvas) {
         this.ctx = canvas.getContext('2d')
-      } 
+    }
 
+    drawTitle(ctx){
+        const maxWidth = this.startScreenWidth - 100
+        let lineHeight = 50
+        
+        let title = 'Hit me, spaghetti, one more time...'              
+
+        this.ctx.beginPath()
+        this.ctx.strokeStyle ='white'
+        this.ctx.strokeRect(this.x, this.y, this.startScreenWidth, this.startScreenHeight)
+
+        this.ctx.font = '3vw Early_gameboyregular'
+        this.ctx.fillStyle = "pink"
+
+        this.wrapText(ctx, title, this.x + 50, this.y + 80, maxWidth, lineHeight);
+    
+        
+    }
+
+    wrapText(ctx, text, x, y, maxWidth, lineHeight) {
+        this.ctx = canvas.getContext('2d')
+        let cars = text.split("\n");
+
+        for (let ii = 0; ii < cars.length; ii++) {
+
+            let line = "";
+            let words = cars[ii].split(" ");
+
+            for (let n = 0; n < words.length; n++) {
+                let testLine = line + words[n] + " ";
+                let metrics = this.ctx.measureText(testLine);
+                let testWidth = metrics.width;
+
+                if (testWidth > maxWidth) {
+                    this.ctx.fillText(line, x, y);
+                    line = words[n] + " ";
+                    y += lineHeight;
+                }
+                else {
+                    line = testLine;
+                }
+            }
+
+            this.ctx.fillText(line, x, y);
+            y += lineHeight;
+        }
+     }
+
+     drawLongText(ctx) {
+        const maxWidth = this.startScreenWidth - 100
+        const lineHeight = 50;
+        
+        const text = 'In a Breakout Room far far away...six brave students gave up there summer (and Autom) to be come the next best coding ninja'              
+
+        // this.ctx.beginPath()
+        // this.ctx.strokeStyle ='white'
+        // this.ctx.strokeRect(this.x, this.y, this.startScreenWidth, this.startScreenHeight)
+
+        this.ctx.font = '2vw Early_gameboyregular'
+        this.ctx.fillStyle = "pink"
+
+        this.wrapText(ctx, text, this.x + 50, this.y + 230, maxWidth, lineHeight);
+    }
+     
 }
 
 // class Background {
@@ -165,8 +237,6 @@ class Counter {
     }
 
     drawLevelCounter(ctx){
-        // const ctx = this.gameBoard.ctx
-        // console.log(this.levels)
         ctx.fillStyle = 'yellow'
         ctx.font = '22px Early_gameboyregular'
         ctx.fillText(`Level: ${this.levels}`, window.innerWidth - 200, 50)
@@ -191,11 +261,10 @@ class Game {
     }
 
     start() {
-       
         this.gameBoard.initialise()
 
-        requestAnimationFrame(this.gameLoop.bind(this))
-        this.intervalID = window.setInterval(this.addIronhacker.bind(this), 2500)
+        // requestAnimationFrame(this.gameLoop.bind(this))
+        // this.intervalID = window.setInterval(this.addIronhacker.bind(this), 2500)
     }
 
     gameLoop(){
@@ -248,16 +317,7 @@ class Game {
                 this.randomIronhackers.splice(0,this.randomIronhackers.length)
             }
         }
-        
-
-    //     let minGap = 50;
-    // let maxGap = 200;
-    // let gap = Math.floor(Math.random() * (maxGap - minGap + 1) + minGap);
-    // myObstacles.push(new Component(10, height, 'green', x, 0));
-    // myObstacles.push(new Component(10, x - height - gap, 'green', x, height + gap));
-
-
-
+    
         this.randomSpeed = 1.5 + (Math.random() * 2) 
         this.randomX =  30 + (Math.random() * (window.innerWidth - 310))
         this.newIronhacker = new Ironhacker(this.randomImg, true, this.randomX, 0, this.randomSpeed, 250, 141)
@@ -309,11 +369,11 @@ class Game {
         })
 
         clickedImgOnScreen.forEach((element, index) => {
-            if(element.y > window.innerHeight - 125 && element.img.src.indexOf('clicked') <= 0 && element.isStudent === true) {
+            if(element.y > window.innerHeight - 100 && element.img.src.indexOf('clicked') <= 0 && element.isStudent === true) {
                 this.counterLives.subtractLives(true)
                 this.counterLives.drawLivesCounter(ctx)
                 this.ironhackersClicked.splice(index, 1)
-            } else if (element.y > window.innerHeight - 125 && element.img.src.indexOf('clicked') >= 0 && element.isStudent === false) {
+            } else if (element.y > window.innerHeight - 100 && element.img.src.indexOf('clicked') >= 0 && element.isStudent === false) {
                 this.counterLives.subtractLives(false)
                 this.counterLives.drawLivesCounter(ctx)
                 this.ironhackersClicked.splice(index, 1)
@@ -353,7 +413,7 @@ class Game {
     }
 
     stop(ctx){
-        if(this.counterLevels.levels === 1) {
+        if(this.counterLives.lives === 0) {
             clearInterval(this.intervalID)
             this.statusStop = true
             this.gameOver(ctx)
@@ -455,9 +515,7 @@ class Game {
                             ironhacker.width -= 100
                             ironhacker.height -= 100
                          }, 250)
-                    }
-
-                    
+                    } 
                 }
             });
         
