@@ -372,13 +372,13 @@ class Game {
         let txtWidth = ctx.measureText(txt).width + (lineWidth * 8) 
         let x = (window.innerWidth / 2) - (txtWidth / 2)
         const y = window.innerHeight / 2 - 10
-
         let i = 0
         
         ctx.lineWidth = 3
         ctx.lineJoin = "miter"
         ctx.globalAlpha = 2/3
-        ctx.strokeStyle = ctx.fillStyle = "red";
+        ctx.strokeStyle = 'red'
+        ctx.fillStyle = 'rgb(0,255,0)';
        
 
         (function loop() {
@@ -396,10 +396,6 @@ class Game {
                 if (i < txt.length) requestAnimationFrame(loop)
             }
             })();
-        // const gameOver = 'GAME OVER'
-        // ctx.fillStyle = 'red'
-        // ctx.font = '100px Early_gameboyregular'
-        // ctx.fillText(gameOver, 150, 300)
     }
     
     addListeners() {
