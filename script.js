@@ -68,7 +68,7 @@ class GameBoard {
         this.y = ((window.innerHeight - 100) / 2 ) - (window.innerHeight / 3)
         this.ctx
         this.startScreenWidth = window.innerWidth / 2 + (window.innerWidth / 6)
-        this.startScreenHeight = ((window.innerHeight - 100) / 2) + ((window.innerHeight -100) / 6)
+        this.startScreenHeight = ((window.innerHeight - 100) / 2) + (((window.innerHeight -100) / 6) * 1.5)
 
         
     }
@@ -87,6 +87,7 @@ class GameBoard {
         this.resizeCanvas()
         this.drawTitle()
         this.drawLongText()
+        this.drawStartButton()
     }
     
     setCtx(canvas) {
@@ -96,15 +97,19 @@ class GameBoard {
     drawTitle(ctx){
         const maxWidth = this.startScreenWidth - 100
         let lineHeight = 50
+        if(window.innerWidth < 800) {
+            lineHeight = 40
+        }
+       
         
         let title = 'Hit me, spaghetti, one more time...'              
 
         this.ctx.beginPath()
-        this.ctx.strokeStyle ='white'
+        this.ctx.strokeStyle ='black'
         this.ctx.strokeRect(this.x, this.y, this.startScreenWidth, this.startScreenHeight)
 
-        this.ctx.font = '3vw Early_gameboyregular'
-        this.ctx.fillStyle = "pink"
+        this.ctx.font = '2.5vw Early_gameboyregular'
+        this.ctx.fillStyle = "yellow"
 
         this.wrapText(ctx, title, this.x + 50, this.y + 80, maxWidth, lineHeight);
     
@@ -142,21 +147,32 @@ class GameBoard {
 
      drawLongText(ctx) {
         const maxWidth = this.startScreenWidth - 100
-        const lineHeight = 50;
+        let lineHeight = 45;
+        if(window.innerWidth < 800) {
+            lineHeight = 30
+        }
         
-        const text = 'In a Breakout Room far far away...six brave students gave up there summer (and Autom) to be come the next best coding ninja'              
+        const text = 'In a Breakout Room far far away...six brave students gave up there summer...and Autumn...to become the next best coding ninja\'s. All you have to do is to throw as mutch spaghetti at them as you can. But be aware...once in a while the teachers join the Breakout Room...and as you might guess...hitting them will get you into trouble!!'              
 
         // this.ctx.beginPath()
         // this.ctx.strokeStyle ='white'
         // this.ctx.strokeRect(this.x, this.y, this.startScreenWidth, this.startScreenHeight)
 
-        this.ctx.font = '2vw Early_gameboyregular'
-        this.ctx.fillStyle = "pink"
+        this.ctx.font = '1.5vw Early_gameboyregular'
+        this.ctx.fillStyle = 'orange'
 
-        this.wrapText(ctx, text, this.x + 50, this.y + 230, maxWidth, lineHeight);
+        this.wrapText(ctx, text, this.x + 50, this.y + 210, maxWidth, lineHeight);
+    }
+
+    drawStartButton(ctx){
+        this.ctx.beginPath()
+        this.ctx.strokeStyle ='white'
+        this.ctx.strokeRect(this.x + 50, this.y + (this.startScreenHeight -100), this.startScreenWidth / 3, 50)
     }
      
 }
+
+
 
 // class Background {
 //     constructor(img, x, y, speed, width, height){
