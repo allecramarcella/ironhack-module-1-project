@@ -69,8 +69,6 @@ class GameBoard {
         this.ctx
         this.startScreenWidth = window.innerWidth / 2 + (window.innerWidth / 6)
         this.startScreenHeight = ((window.innerHeight - 100) / 2) + (((window.innerHeight -100) / 6) * 1.5)
-
-        
     }
 
     resizeCanvas(){
@@ -80,20 +78,27 @@ class GameBoard {
 
     initialise() {
         const canvas = document.getElementById('canvas')
-        document.getElementById('canvas').style.cursor = "pointer"
-
-
+  
         window.addEventListener('resize', this.resizeCanvas, false);
         this.setCtx(canvas)
         this.resizeCanvas()
+        // this.startScreen()
         this.drawTitle()
         this.drawLongText()
         this.drawStartButton()
+        this.addEventListenerStart()
     }
     
     setCtx(canvas) {
         this.ctx = canvas.getContext('2d')
     }
+
+    // startScreen(){
+    //     let popUp = document.createElement('h2')
+    //     popUp.innerHTML = 'helllo'
+    //     let parent = document.getElementsByTagName('body')[0];
+    //     parent.appendChild(popUp);
+    // }
 
     resizePopUp(){
         if(window.innerWidth > 1200 ) {
@@ -126,7 +131,7 @@ class GameBoard {
         let title = 'Hit me, SPAGHETTI, one more time...'              
 
         this.ctx.beginPath()
-        this.ctx.fillStyle = 'white'
+        this.ctx.fillStyle = '#173e43'
         this.ctx.fillRect(this.x, this.y, this.startScreenWidth, this.startScreenHeight)
 
         this.ctx.font = '4vw Slackey'
@@ -178,10 +183,10 @@ class GameBoard {
             lineHeight = 30
         }
         
-        const text = 'In a Breakout Room far far away...six brave students gave up there summer...and autumn...to become the next best coding ninja\'s. All you have to do is to throw as mutch spaghetti at them as you can. But be aware...once in a while the teachers join the Breakout Room...and as you might guess...hitting them will get you into trouble!!'              
+        const text = 'In a Breakout Room far far away...six brave students gave up their summer...and autumn...to become the next best coding ninjas. All you have to do is to throw as much spaghetti at them as you can. But be aware...once in a while the teachers join the Breakout Room...and as you might guess...hitting them will get you into trouble!!'              
 
         this.ctx.font = '2.2vw Open Sans'
-        this.ctx.fillStyle = 'white'
+        this.ctx.fillStyle = '#dddfd4'
 
        
         if(window.innerWidth > 1200 ) {
@@ -205,29 +210,29 @@ class GameBoard {
     drawStartButton(ctx){
         this.resizePopUp()
         this.ctx.beginPath()
-        this.ctx.fillStyle ='blue'
+        this.ctx.strokeStyle ='#3fb0ac'
         
 
         if(window.innerWidth > 1200 ) {
-            this.ctx.fillRect(this.x + 60, this.y + (this.startScreenHeight - 190), this.startScreenWidth - 120, 50)
+            this.ctx.strokeRect(this.x + 60, this.y + (this.startScreenHeight - 190), this.startScreenWidth - 120, 50)
         } else if ( window.innerWidth < 1200 && window.innerWidth > 1000){
-            this.ctx.fillRect(this.x + 60, this.y + (this.startScreenHeight - 130), this.startScreenWidth - 120, 50)
+            this.ctx.strokeRect(this.x + 60, this.y + (this.startScreenHeight - 130), this.startScreenWidth - 120, 50)
         } else if ( window.innerWidth < 1000 && window.innerWidth > 900){
-            this.ctx.fillRect(this.x + 60, this.y + (this.startScreenHeight -30), this.startScreenWidth - 120, 50)
+            this.ctx.strokeRect(this.x + 60, this.y + (this.startScreenHeight -30), this.startScreenWidth - 120, 50)
         } else if ( window.innerWidth < 900 && window.innerWidth > 800){
-            this.ctx.fillRect(this.x + 60, this.y + (this.startScreenHeight + 35), this.startScreenWidth - 120, 50)
+            this.ctx.strokeRect(this.x + 60, this.y + (this.startScreenHeight + 35), this.startScreenWidth - 120, 50)
         } else if( window.innerWidth < 800 && window.innerWidth > 700) {
-            this.ctx.fillRect(this.x + 60, this.y + (this.startScreenHeight + 100), this.startScreenWidth - 120, 50)
+            this.ctx.strokeRect(this.x + 60, this.y + (this.startScreenHeight + 100), this.startScreenWidth - 120, 50)
         } else if(window.innerWidth < 700 && window.innerWidth > 578){
-            this.ctx.fillRect(this.x + 60, this.y + (this.startScreenHeight + 215), this.startScreenWidth - 120, 50)
+            this.ctx.strokeRect(this.x + 60, this.y + (this.startScreenHeight + 215), this.startScreenWidth - 120, 50)
         } else {
-            this.ctx.fillRect(this.x + 60, this.y + (this.startScreenHeight + 100), this.startScreenWidth - 120, 50)
+            this.ctx.strokeRect(this.x + 60, this.y + (this.startScreenHeight + 100), this.startScreenWidth - 120, 50)
         }
 
 
        
-        this.ctx.font = '2.2vw Open Sans'
-        this.ctx.fillStyle = 'orange'
+        this.ctx.font = '2vw Open Sans'
+        this.ctx.fillStyle = 'pink'
         let text = 'Join Breakout Room'
         let measuredText = this.ctx.measureText(text).width / 2
       
@@ -248,7 +253,20 @@ class GameBoard {
             this.ctx.fillText(text, this.x + (this.startScreenWidth / 2 - measuredText), this.y + (this.startScreenHeight + 130))
         }
     }
-     
+
+    addEventListenerStart(){
+        // const canvas = document.getElementById('canvas')
+        // this.ctx = canvas.getContext('2d')
+        // // const canvasLeft = canvas.offsetLeft + canvas.clientLeft
+        // // const canvasTop = canvas.offsetTop + canvas.clientTop
+  
+        // canvas.addEventListener('click', function(event) {
+        //     this.ctx = canvas.getContext('2d')
+        //     this.ctx.clearRect(0, 0, window.innerWidth, window.innerHeight)
+            game.inBreakOutRoom()
+
+    //     })
+    }
 }
 
 
@@ -326,15 +344,15 @@ class Counter {
     }
 
     drawLivesCounter(ctx) {
-        ctx.fillStyle = 'pink'
-        ctx.font = '22px Early_gameboyregular'
+        ctx.fillStyle = 'yellow'
+        ctx.font = '22px Slackey'
         ctx.fillText(`Lives: ${this.lives}`, 30, 50)
     }
 
     drawLevelCounter(ctx){
-        ctx.fillStyle = 'yellow'
-        ctx.font = '22px Early_gameboyregular'
-        ctx.fillText(`Level: ${this.levels}`, window.innerWidth - 200, 50)
+        ctx.fillStyle = 'pink'
+        ctx.font = '22px Slackey'
+        ctx.fillText(`Level: ${this.levels}`, window.innerWidth - 150, 50)
     }
 }
 
@@ -348,6 +366,7 @@ class Game {
         this.shuffledIronhackersImgArr
         this.ironhackers = []
         this.ironhackersClicked = []
+        this.ironhackersSpeedUp = []
         this.randomTeacherImg
         this.randomImg
         this.randomSpeed
@@ -357,10 +376,14 @@ class Game {
 
     start() {
         this.gameBoard.initialise()
-
-        // requestAnimationFrame(this.gameLoop.bind(this))
-        // this.intervalID = window.setInterval(this.addIronhacker.bind(this), 2500)
     }
+
+    inBreakOutRoom(){
+        requestAnimationFrame(this.gameLoop.bind(this))
+        this.intervalID = window.setInterval(this.addIronhacker.bind(this), 2500)
+    }
+
+   
 
     gameLoop(){
         const ctx = this.gameBoard.ctx
@@ -415,16 +438,26 @@ class Game {
     
         this.randomSpeed = 1.5 + (Math.random() * 2) 
         this.randomX =  30 + (Math.random() * (window.innerWidth - 310))
+
+        this.ironhackers.forEach(ironhacker => {
+            if(ironhacker.randomX === this.randomX) {
+                thisUniqueRandomX = 30 + (Math.random() * (window.innerWidth - 310))
+                this.randomX = thisUniqueRandomX
+            } else {
+                this.randomX = this.randomX
+            }
+        })
+
+
         this.newIronhacker = new Ironhacker(this.randomImg, true, this.randomX, 0, this.randomSpeed, 250, 141)
-        
+
         this.ironhackers.push(this.newIronhacker)  
         this.ironhackersClicked.push(this.newIronhacker)
         this.addTeachers()
-        
     }
 
     addTeachers(){
-        const randomNumber = 0 + Math.floor(Math.random() * 2)
+        const randomNumber = 0 + Math.floor(Math.random() * 7)
         if(randomNumber === 1) {
 
             this.shuffleIronhackersImgArray(teachersImgArray)
@@ -433,10 +466,36 @@ class Game {
 
             this.randomSpeed = 1 + (Math.random() * 3)
             this.randomX =  30 + (Math.random() * (window.innerWidth - 310))
+
+            // this.ironhackers.forEach(ironhacker => {
+            //     if(ironhacker.randomX === this.randomX) {
+            //         if(ironhacker.speed === this.randomSpeed) {
+            //             thisUniqueRandomSpeed = this.randomSpeed = 1 + (Math.random() * 3)
+            //             this.randomSpeed = thisUniqueRandomSpeed
+            //         }  
+            //     } else {
+            //         this.randomSpeed= this.randomSpeed
+            //     }
+            // })
+
+       
+
             this.newIronhacker = new Ironhacker(this.randomImg, false, this.randomX, 0, this.randomSpeed, 250, 141)
         
             this.ironhackers.push(this.newIronhacker)  
             this.ironhackersClicked.push(this.newIronhacker)
+            this.ironhackersSpeedUp.push(this.newIronhacker)
+
+            this.ironhackers.forEach(ironhacker => {
+                console.log((ironhacker.randomX - (ironhacker.width * 2 + 10)))
+                console.log(ironhacker.randomX)
+                if(this.randomX > (ironhacker.randomX - (ironhacker.width * 2 + 10)) && this.randomX < ironhacker.randomX + (ironhacker.width + 10) ) {
+                    thisUniqueRandomX = 30 + (Math.random() * (window.innerWidth - 310))
+                    this.randomX = thisUniqueRandomX
+                } else {
+                    this.randomX = this.randomX
+                }
+            })
         } 
     }
 
@@ -480,7 +539,7 @@ class Game {
         this.ironhackers.forEach(element => {
             switch(this.counterLevels.levels) {
                 case 1:
-                    this.randomSpeed = 2.5 + (Math.random() * 2)
+                    this.randomSpeed = 5.5 + (Math.random() * 2)
                     element.speed = this.randomSpeed
                     break;
                 case 2: 
@@ -508,17 +567,23 @@ class Game {
     }
 
     stop(ctx){
-        if(this.counterLives.lives === 0) {
+        if(this.counterLives.lives === -10) {
             clearInterval(this.intervalID)
             this.statusStop = true
             this.gameOver(ctx)
+        } else if (this.counterLevels.levels === 7) {
+            clearInterval(this.intervalID)
+            this.statusStop = true
+            this.winner(ctx)
         }
     }
 
     gameOver(ctx){
-        ctx.font = '8vw Early_gameboyregular'
-       
-
+        ctx.clearRect(0,0, window.innerWidth, window.innerHeight)
+        this.updateLeves(ctx)
+        this.updateLives(ctx)
+        ctx.font = '8vw Slackey'
+    
         let dashLen = 220
         let dashOffset = dashLen
         const speed = 10
@@ -526,14 +591,14 @@ class Game {
         const lineWidth = 3
         let txtWidth = ctx.measureText(txt).width + (lineWidth * 8) 
         let x = (window.innerWidth / 2) - (txtWidth / 2)
-        const y = window.innerHeight / 2 - 10
+        const y = window.innerHeight / 2 - 100
         let i = 0
         
         ctx.lineWidth = 3
         ctx.lineJoin = "miter"
         ctx.globalAlpha = 2/3
-        ctx.strokeStyle = 'red'
-        ctx.fillStyle = 'rgb(0,255,0)';
+        ctx.strokeStyle = '#e62739'
+        ctx.fillStyle = '#e62739';
        
 
         (function loop() {
@@ -553,6 +618,49 @@ class Game {
             })();
     }
     
+    winner(ctx){
+        ctx.clearRect(0,0, window.innerWidth, window.innerHeight)
+        this.updateLeves(ctx)
+        this.updateLives(ctx)
+        ctx.font = '8vw Slackey'
+    
+        let dashLen = 220
+        let dashOffset = dashLen
+        const speed = 10
+        const txt = "You Rock!"
+        const lineWidth = 3
+        let txtWidth = ctx.measureText(txt).width + (lineWidth * 8) 
+        let x = (window.innerWidth / 2) - (txtWidth / 2)
+        const y = window.innerHeight / 2 - 100
+        let i = 0
+        
+        ctx.lineWidth = 3
+        ctx.lineJoin = "miter"
+        ctx.globalAlpha = 2/3
+        ctx.strokeStyle = '#e62739'
+        ctx.fillStyle = '#e62739';
+       
+
+        (function loop() {
+            ctx.setLineDash([dashLen - dashOffset, dashOffset - speed]) 
+            dashOffset -= speed                                  
+            ctx.strokeText(txt[i], x, y)                             
+
+            if (dashOffset > 0) requestAnimationFrame(loop)        
+            else {
+                ctx.fillText(txt[i], x, y)                               
+                dashOffset = dashLen                                   
+                x += ctx.measureText(txt[i++]).width + ctx.lineWidth 
+                ctx.setTransform(1, 0, 0, 1, 0, 3 * Math.random())        
+                ctx.rotate(Math.random() * 0.005)                        
+                if (i < txt.length) requestAnimationFrame(loop)
+            }
+            })();
+
+        
+    }
+
+
     addListeners() {
         const canvas = document.getElementById('canvas')
         const canvasLeft = canvas.offsetLeft + canvas.clientLeft
@@ -566,7 +674,7 @@ class Game {
         canvas.addEventListener('click', function(event) {
             const x = event.pageX - canvasLeft
             const y = event.pageY - canvasTop;
-    
+
             imgOnscreen.forEach(function(ironhacker) {
                 if (y > ironhacker.y && y < ironhacker.y + ironhacker.height 
                     && x > ironhacker.x && x < ironhacker.x + ironhacker.width) {
@@ -612,9 +720,9 @@ class Game {
                          }, 250)
                     } 
                 }
-            });
+            })
         
-        }, false);
+        })
     }
 
    
