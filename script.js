@@ -82,190 +82,47 @@ class GameBoard {
         window.addEventListener('resize', this.resizeCanvas, false);
         this.setCtx(canvas)
         this.resizeCanvas()
-        // this.startScreen()
-        this.drawTitle()
-        this.drawLongText()
-        this.drawStartButton()
-        this.addEventListenerStart()
+        this.startScreen()
+        // this.drawTitle()
+        // this.drawLongText()
+        // this.drawStartButton()
+        // this.addEventListenerStart()
     }
     
     setCtx(canvas) {
         this.ctx = canvas.getContext('2d')
     }
 
-    // startScreen(){
-    //     let popUp = document.createElement('h2')
-    //     popUp.innerHTML = 'helllo'
-    //     let parent = document.getElementsByTagName('body')[0];
-    //     parent.appendChild(popUp);
-    // }
+    startScreen(){
+        // create html element start screen
+        let startScreen = document.createElement('div')
+        startScreen.setAttribute('id', 'start-screen')
 
-    resizePopUp(){
-        if(window.innerWidth > 1200 ) {
-            this.startScreenHeight += 40
-        } else if ( window.innerWidth < 1200 && window.innerWidth > 1000){
-            this.startScreenHeight 
-        } else if ( window.innerWidth < 1000 && window.innerWidth > 900){
-            this.startScreenHeight  -= 50
-        } else if ( window.innerWidth < 900 && window.innerWidth > 800){
-            this.startScreenHeight -= 70
-        } else if( window.innerWidth < 800 && window.innerWidth > 700) {
-            this.startScreenHeight -= 100
-        } else if(window.innerWidth < 700 && window.innerWidth > 578){
-            this.startScreenHeight -= 160
-        } else {
-            this.startScreenHeight -= 100
-        }
-    }
-    drawTitle(ctx){
-        this.resizePopUp()
-        const maxWidth = this.startScreenWidth - 120
-        let lineHeight = 75
-        if(window.innerWidth < 1200 && window.innerWidth > 800) {
-            lineHeight = 65
-        } else if(window.innerWidth < 800){
-            lineHeight = 40
-        }
+        let parentContainer = document.getElementsByClassName('container')[0];
+        parentContainer.appendChild(startScreen);
+
+        let titelGame = document.createElement('h1')
+        titelGame.innerHTML = 'Hit me, Spaghetti, one more time...'
+        let parentStartScreen = document.getElementById('start-screen')
+        parentStartScreen.appendChild(titelGame)
+
+        let explanationText1 = document.createElement('p')
+        let explanationText2 = document.createElement('p')
+        explanationText1.innerHTML = 'In a Breakout Room far far away......six brave students gave up their summer.....and autumn.....to become the next best coding ninjas.' 
+        explanationText2.innerHTML = 'Since teaching is like throwing spaghetti and hoping some will stick (read: quote teacher)......all you have to do is to throw as much spaghetti at the students as you can. But BE AWARE.....once in a while the teacher and teacher assistant join the Breakout Room......and as you might guess......hitting them will get you into trouble!!'
        
-        
-        let title = 'Hit me, SPAGHETTI, one more time...'              
+        parentStartScreen.appendChild(explanationText1)
+        parentStartScreen.appendChild(explanationText2)
 
-        this.ctx.beginPath()
-        this.ctx.fillStyle = '#173e43'
-        this.ctx.fillRect(this.x, this.y, this.startScreenWidth, this.startScreenHeight)
+        let button = document.createElement('button')
+        button.innerHTML = 'Join Breakout Room'
+        parentStartScreen.appendChild(button)
 
-        this.ctx.font = '4vw Slackey'
-        this.ctx.fillStyle = "yellow"
-
-        this.wrapText(ctx, title, this.x + 60, this.y + 100, maxWidth, lineHeight);
-    
-        
-    }
-
-    wrapText(ctx, text, x, y, maxWidth, lineHeight) {
-        this.ctx = canvas.getContext('2d')
-        let cars = text.split("\n");
-
-        for (let ii = 0; ii < cars.length; ii++) {
-
-            let line = "";
-            let words = cars[ii].split(" ");
-
-            for (let n = 0; n < words.length; n++) {
-                let testLine = line + words[n] + " ";
-                let metrics = this.ctx.measureText(testLine);
-                let testWidth = metrics.width;
-
-                if (testWidth > maxWidth) {
-                    this.ctx.fillText(line, x, y);
-                    line = words[n] + " ";
-                    y += lineHeight;
-                }
-                else {
-                    line = testLine;
-                }
-            }
-
-            this.ctx.fillText(line, x, y);
-            y += lineHeight;
-        }
-     }
-
-     drawLongText(ctx) {
-        this.resizePopUp()
-        const maxWidth = this.startScreenWidth - 120
-        let lineHeight = 55
-        if(window.innerWidth < 1200 && window.innerWidth > 1000) {
-            lineHeight = 45
-        } else if( window.innerWidth < 1000 && window.innerWidth > 700) {
-            lineHeight = 40
-        } else if(window.innerWidth < 700){
-            lineHeight = 30
-        }
-        
-        const text = 'In a Breakout Room far far away...six brave students gave up their summer...and autumn...to become the next best coding ninjas. All you have to do is to throw as much spaghetti at them as you can. But be aware...once in a while the teachers join the Breakout Room...and as you might guess...hitting them will get you into trouble!!'              
-
-        this.ctx.font = '2.2vw Open Sans'
-        this.ctx.fillStyle = '#dddfd4'
-
-       
-        if(window.innerWidth > 1200 ) {
-            this.wrapText(ctx, text, this.x + 60, this.y + 270, maxWidth, lineHeight);
-        } else if ( window.innerWidth < 1200 && window.innerWidth > 1000){
-            this.wrapText(ctx, text, this.x + 60, this.y + 250, maxWidth, lineHeight);
-        } else if ( window.innerWidth < 1000 && window.innerWidth > 900){
-            this.wrapText(ctx, text, this.x + 60, this.y + 240, maxWidth, lineHeight);
-        } else if ( window.innerWidth < 900 && window.innerWidth > 800){
-            this.wrapText(ctx, text, this.x + 60, this.y + 230, maxWidth, lineHeight);
-        } else if( window.innerWidth < 800 && window.innerWidth > 700) {
-            this.wrapText(ctx, text, this.x + 60, this.y + 210, maxWidth, lineHeight);
-        } else if(window.innerWidth < 700 && window.innerWidth > 578){
-            this.wrapText(ctx, text, this.x + 60, this.y + 200, maxWidth, lineHeight);
-        } else {
-            this.wrapText(ctx, text, this.x + 60, this.y + 240, maxWidth, lineHeight);
-        }
-
-    }
-
-    drawStartButton(ctx){
-        this.resizePopUp()
-        this.ctx.beginPath()
-        this.ctx.strokeStyle ='#3fb0ac'
-        
-
-        if(window.innerWidth > 1200 ) {
-            this.ctx.strokeRect(this.x + 60, this.y + (this.startScreenHeight - 190), this.startScreenWidth - 120, 50)
-        } else if ( window.innerWidth < 1200 && window.innerWidth > 1000){
-            this.ctx.strokeRect(this.x + 60, this.y + (this.startScreenHeight - 130), this.startScreenWidth - 120, 50)
-        } else if ( window.innerWidth < 1000 && window.innerWidth > 900){
-            this.ctx.strokeRect(this.x + 60, this.y + (this.startScreenHeight -30), this.startScreenWidth - 120, 50)
-        } else if ( window.innerWidth < 900 && window.innerWidth > 800){
-            this.ctx.strokeRect(this.x + 60, this.y + (this.startScreenHeight + 35), this.startScreenWidth - 120, 50)
-        } else if( window.innerWidth < 800 && window.innerWidth > 700) {
-            this.ctx.strokeRect(this.x + 60, this.y + (this.startScreenHeight + 100), this.startScreenWidth - 120, 50)
-        } else if(window.innerWidth < 700 && window.innerWidth > 578){
-            this.ctx.strokeRect(this.x + 60, this.y + (this.startScreenHeight + 215), this.startScreenWidth - 120, 50)
-        } else {
-            this.ctx.strokeRect(this.x + 60, this.y + (this.startScreenHeight + 100), this.startScreenWidth - 120, 50)
-        }
-
-
-       
-        this.ctx.font = '2vw Open Sans'
-        this.ctx.fillStyle = 'pink'
-        let text = 'Join Breakout Room'
-        let measuredText = this.ctx.measureText(text).width / 2
-      
-        
-        if(window.innerWidth > 1200 ) {
-            this.ctx.fillText(text, this.x + (this.startScreenWidth / 2 - measuredText), this.y + (this.startScreenHeight -155))
-        } else if ( window.innerWidth < 1200 && window.innerWidth > 1000){
-            this.ctx.fillText(text, this.x + (this.startScreenWidth / 2 - measuredText), this.y + (this.startScreenHeight - 97))
-        } else if ( window.innerWidth < 1000 && window.innerWidth > 900){
-            this.ctx.fillText(text, this.x + (this.startScreenWidth / 2 - measuredText), this.y + (this.startScreenHeight + 2))
-        } else if ( window.innerWidth < 900 && window.innerWidth > 800){
-            this.ctx.fillText(text, this.x + (this.startScreenWidth / 2 - measuredText), this.y + (this.startScreenHeight + 65))
-        } else if( window.innerWidth < 800 && window.innerWidth > 700) {
-            this.ctx.fillText(text, this.x + (this.startScreenWidth / 2 - measuredText), this.y + (this.startScreenHeight + 130))
-        } else if(window.innerWidth < 700 && window.innerWidth > 578){
-            this.ctx.fillText(text, this.x + (this.startScreenWidth / 2 - measuredText), this.y + (this.startScreenHeight + 245))
-        } else {
-            this.ctx.fillText(text, this.x + (this.startScreenWidth / 2 - measuredText), this.y + (this.startScreenHeight + 130))
-        }
-    }
-
-    addEventListenerStart(){
-        // const canvas = document.getElementById('canvas')
-        // this.ctx = canvas.getContext('2d')
-        // // const canvasLeft = canvas.offsetLeft + canvas.clientLeft
-        // // const canvasTop = canvas.offsetTop + canvas.clientTop
-  
-        // canvas.addEventListener('click', function(event) {
-        //     this.ctx = canvas.getContext('2d')
-        //     this.ctx.clearRect(0, 0, window.innerWidth, window.innerHeight)
+        button.addEventListener('click', () => {
+            parentContainer.removeChild(startScreen)
             game.inBreakOutRoom()
-
-    //     })
+            
+        })
     }
 }
 
@@ -467,6 +324,20 @@ class Game {
             this.randomSpeed = 1 + (Math.random() * 3)
             this.randomX =  30 + (Math.random() * (window.innerWidth - 310))
 
+        
+            // this.ironhackers.forEach((ironhacker, index) => {
+            //     console.log((ironhacker.x- (ironhacker.width * 2 + 10)))
+            //     console.log(ironhacker.x)
+            //     console.log(ironhacker)
+            //     console.log(index)
+            //     if(this.randomX > (ironhacker.x  - (ironhacker.width * 2 + 10)) && this.randomX < ironhacker.x + (ironhacker.width + 10) ) {
+            //         let thisUniqueRandomX = 30 + (Math.random() * (window.innerWidth - 310))
+            //         this.randomX = thisUniqueRandomX
+            //     } else {
+            //         this.randomX = this.randomX
+            //     }
+            // })
+
             // this.ironhackers.forEach(ironhacker => {
             //     if(ironhacker.randomX === this.randomX) {
             //         if(ironhacker.speed === this.randomSpeed) {
@@ -478,24 +349,13 @@ class Game {
             //     }
             // })
 
-       
+           
 
             this.newIronhacker = new Ironhacker(this.randomImg, false, this.randomX, 0, this.randomSpeed, 250, 141)
         
             this.ironhackers.push(this.newIronhacker)  
             this.ironhackersClicked.push(this.newIronhacker)
             this.ironhackersSpeedUp.push(this.newIronhacker)
-
-            this.ironhackers.forEach(ironhacker => {
-                console.log((ironhacker.randomX - (ironhacker.width * 2 + 10)))
-                console.log(ironhacker.randomX)
-                if(this.randomX > (ironhacker.randomX - (ironhacker.width * 2 + 10)) && this.randomX < ironhacker.randomX + (ironhacker.width + 10) ) {
-                    thisUniqueRandomX = 30 + (Math.random() * (window.innerWidth - 310))
-                    this.randomX = thisUniqueRandomX
-                } else {
-                    this.randomX = this.randomX
-                }
-            })
         } 
     }
 
@@ -539,7 +399,7 @@ class Game {
         this.ironhackers.forEach(element => {
             switch(this.counterLevels.levels) {
                 case 1:
-                    this.randomSpeed = 5.5 + (Math.random() * 2)
+                    this.randomSpeed = 2.5 + (Math.random() * 2)
                     element.speed = this.randomSpeed
                     break;
                 case 2: 
@@ -724,7 +584,6 @@ class Game {
         
         })
     }
-
    
 }
 
