@@ -80,6 +80,7 @@ class GameBoard {
 
     initialise() {
         const canvas = document.getElementById('canvas')
+        document.getElementById('canvas').style.cursor = "pointer"
 
 
         window.addEventListener('resize', this.resizeCanvas, false);
@@ -94,24 +95,44 @@ class GameBoard {
         this.ctx = canvas.getContext('2d')
     }
 
+    resizePopUp(){
+        if(window.innerWidth > 1200 ) {
+            this.startScreenHeight += 40
+        } else if ( window.innerWidth < 1200 && window.innerWidth > 1000){
+            this.startScreenHeight 
+        } else if ( window.innerWidth < 1000 && window.innerWidth > 900){
+            this.startScreenHeight  -= 50
+        } else if ( window.innerWidth < 900 && window.innerWidth > 800){
+            this.startScreenHeight -= 70
+        } else if( window.innerWidth < 800 && window.innerWidth > 700) {
+            this.startScreenHeight -= 100
+        } else if(window.innerWidth < 700 && window.innerWidth > 578){
+            this.startScreenHeight -= 160
+        } else {
+            this.startScreenHeight -= 100
+        }
+    }
     drawTitle(ctx){
-        const maxWidth = this.startScreenWidth - 100
-        let lineHeight = 50
-        if(window.innerWidth < 800) {
+        this.resizePopUp()
+        const maxWidth = this.startScreenWidth - 120
+        let lineHeight = 75
+        if(window.innerWidth < 1200 && window.innerWidth > 800) {
+            lineHeight = 65
+        } else if(window.innerWidth < 800){
             lineHeight = 40
         }
        
         
-        let title = 'Hit me, spaghetti, one more time...'              
+        let title = 'Hit me, SPAGHETTI, one more time...'              
 
         this.ctx.beginPath()
-        this.ctx.strokeStyle ='black'
-        this.ctx.strokeRect(this.x, this.y, this.startScreenWidth, this.startScreenHeight)
+        this.ctx.fillStyle = 'white'
+        this.ctx.fillRect(this.x, this.y, this.startScreenWidth, this.startScreenHeight)
 
-        this.ctx.font = '2.5vw Early_gameboyregular'
+        this.ctx.font = '4vw Slackey'
         this.ctx.fillStyle = "yellow"
 
-        this.wrapText(ctx, title, this.x + 50, this.y + 80, maxWidth, lineHeight);
+        this.wrapText(ctx, title, this.x + 60, this.y + 100, maxWidth, lineHeight);
     
         
     }
@@ -146,28 +167,86 @@ class GameBoard {
      }
 
      drawLongText(ctx) {
-        const maxWidth = this.startScreenWidth - 100
-        let lineHeight = 45;
-        if(window.innerWidth < 800) {
+        this.resizePopUp()
+        const maxWidth = this.startScreenWidth - 120
+        let lineHeight = 55
+        if(window.innerWidth < 1200 && window.innerWidth > 1000) {
+            lineHeight = 45
+        } else if( window.innerWidth < 1000 && window.innerWidth > 700) {
+            lineHeight = 40
+        } else if(window.innerWidth < 700){
             lineHeight = 30
         }
         
-        const text = 'In a Breakout Room far far away...six brave students gave up there summer...and Autumn...to become the next best coding ninja\'s. All you have to do is to throw as mutch spaghetti at them as you can. But be aware...once in a while the teachers join the Breakout Room...and as you might guess...hitting them will get you into trouble!!'              
+        const text = 'In a Breakout Room far far away...six brave students gave up there summer...and autumn...to become the next best coding ninja\'s. All you have to do is to throw as mutch spaghetti at them as you can. But be aware...once in a while the teachers join the Breakout Room...and as you might guess...hitting them will get you into trouble!!'              
 
-        // this.ctx.beginPath()
-        // this.ctx.strokeStyle ='white'
-        // this.ctx.strokeRect(this.x, this.y, this.startScreenWidth, this.startScreenHeight)
+        this.ctx.font = '2.2vw Open Sans'
+        this.ctx.fillStyle = 'white'
 
-        this.ctx.font = '1.5vw Early_gameboyregular'
-        this.ctx.fillStyle = 'orange'
+       
+        if(window.innerWidth > 1200 ) {
+            this.wrapText(ctx, text, this.x + 60, this.y + 270, maxWidth, lineHeight);
+        } else if ( window.innerWidth < 1200 && window.innerWidth > 1000){
+            this.wrapText(ctx, text, this.x + 60, this.y + 250, maxWidth, lineHeight);
+        } else if ( window.innerWidth < 1000 && window.innerWidth > 900){
+            this.wrapText(ctx, text, this.x + 60, this.y + 240, maxWidth, lineHeight);
+        } else if ( window.innerWidth < 900 && window.innerWidth > 800){
+            this.wrapText(ctx, text, this.x + 60, this.y + 230, maxWidth, lineHeight);
+        } else if( window.innerWidth < 800 && window.innerWidth > 700) {
+            this.wrapText(ctx, text, this.x + 60, this.y + 210, maxWidth, lineHeight);
+        } else if(window.innerWidth < 700 && window.innerWidth > 578){
+            this.wrapText(ctx, text, this.x + 60, this.y + 200, maxWidth, lineHeight);
+        } else {
+            this.wrapText(ctx, text, this.x + 60, this.y + 240, maxWidth, lineHeight);
+        }
 
-        this.wrapText(ctx, text, this.x + 50, this.y + 210, maxWidth, lineHeight);
     }
 
     drawStartButton(ctx){
+        this.resizePopUp()
         this.ctx.beginPath()
-        this.ctx.strokeStyle ='white'
-        this.ctx.strokeRect(this.x + 50, this.y + (this.startScreenHeight -100), this.startScreenWidth / 3, 50)
+        this.ctx.fillStyle ='blue'
+        
+
+        if(window.innerWidth > 1200 ) {
+            this.ctx.fillRect(this.x + 60, this.y + (this.startScreenHeight - 190), this.startScreenWidth - 120, 50)
+        } else if ( window.innerWidth < 1200 && window.innerWidth > 1000){
+            this.ctx.fillRect(this.x + 60, this.y + (this.startScreenHeight - 130), this.startScreenWidth - 120, 50)
+        } else if ( window.innerWidth < 1000 && window.innerWidth > 900){
+            this.ctx.fillRect(this.x + 60, this.y + (this.startScreenHeight -30), this.startScreenWidth - 120, 50)
+        } else if ( window.innerWidth < 900 && window.innerWidth > 800){
+            this.ctx.fillRect(this.x + 60, this.y + (this.startScreenHeight + 35), this.startScreenWidth - 120, 50)
+        } else if( window.innerWidth < 800 && window.innerWidth > 700) {
+            this.ctx.fillRect(this.x + 60, this.y + (this.startScreenHeight + 100), this.startScreenWidth - 120, 50)
+        } else if(window.innerWidth < 700 && window.innerWidth > 578){
+            this.ctx.fillRect(this.x + 60, this.y + (this.startScreenHeight + 215), this.startScreenWidth - 120, 50)
+        } else {
+            this.ctx.fillRect(this.x + 60, this.y + (this.startScreenHeight + 100), this.startScreenWidth - 120, 50)
+        }
+
+
+       
+        this.ctx.font = '2.2vw Open Sans'
+        this.ctx.fillStyle = 'orange'
+        let text = 'Join Breakout Room'
+        let measuredText = this.ctx.measureText(text).width / 2
+      
+        
+        if(window.innerWidth > 1200 ) {
+            this.ctx.fillText(text, this.x + (this.startScreenWidth / 2 - measuredText), this.y + (this.startScreenHeight -155))
+        } else if ( window.innerWidth < 1200 && window.innerWidth > 1000){
+            this.ctx.fillText(text, this.x + (this.startScreenWidth / 2 - measuredText), this.y + (this.startScreenHeight - 97))
+        } else if ( window.innerWidth < 1000 && window.innerWidth > 900){
+            this.ctx.fillText(text, this.x + (this.startScreenWidth / 2 - measuredText), this.y + (this.startScreenHeight + 2))
+        } else if ( window.innerWidth < 900 && window.innerWidth > 800){
+            this.ctx.fillText(text, this.x + (this.startScreenWidth / 2 - measuredText), this.y + (this.startScreenHeight + 65))
+        } else if( window.innerWidth < 800 && window.innerWidth > 700) {
+            this.ctx.fillText(text, this.x + (this.startScreenWidth / 2 - measuredText), this.y + (this.startScreenHeight + 130))
+        } else if(window.innerWidth < 700 && window.innerWidth > 578){
+            this.ctx.fillText(text, this.x + (this.startScreenWidth / 2 - measuredText), this.y + (this.startScreenHeight + 245))
+        } else {
+            this.ctx.fillText(text, this.x + (this.startScreenWidth / 2 - measuredText), this.y + (this.startScreenHeight + 130))
+        }
     }
      
 }

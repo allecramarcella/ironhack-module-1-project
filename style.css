@@ -1,14 +1,22 @@
-@font-face {
+/* @font-face {
     font-family: 'early_gameboyregular';
     src: url('./fonts/early_gameboy-webfont.woff2') format('woff2'),
          url('./fonts/early_gameboy-webfont.woff') format('woff');
     font-weight: normal;
     font-style: normal;
-}
+
+} */
+@import url('https://fonts.googleapis.com/css2?family=Baloo+Paaji+2:wght@500&family=Slackey&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Single+Day&display=swap');
 
 #canvas {
     background-color: black;
     display: block;
+}
+
+canvas{
+    cursor: url(./icons/cursor_spaghetti.cur), url(./icons/cursor_spaghetti.png), none;
+
 }
 
 * { 
@@ -19,7 +27,10 @@
 html, body { 
     width:100%; 
     height:100%; 
+    cursor: url(./icons/cursor_spaghetti.cur), none;
+    
 } 
+
 
 .game-border-top{
     background-color: #383b41;
@@ -36,6 +47,7 @@ html, body {
     text-align: center;
     padding-top: 3px;
     letter-spacing: 0.8px;
+
 }
 
 .game-border-bottom{
