@@ -119,10 +119,36 @@ class GameBoard {
         parentStartScreen.appendChild(button)
 
         button.addEventListener('click', () => {
-            parentContainer.removeChild(startScreen)
-            game.inBreakOutRoom()
+            parentStartScreen.removeChild(titelGame)
+            parentStartScreen.removeChild(explanationText1)
+            parentStartScreen.removeChild(explanationText2)
+            parentStartScreen.removeChild(button)
+            this.breakoutRoomLoading()
+           
             
         })
+    }
+
+    breakoutRoomLoading(){
+        let joinBreakoutRoom = document.createElement('h2')
+        joinBreakoutRoom.innerHTML = 'Joining Breakout Room'
+        let parentStartScreen = document.getElementById('start-screen')
+        parentStartScreen.appendChild(joinBreakoutRoom)
+
+ 
+
+        function timeout(){
+            setTimeout(function(){
+                let parentContainer = document.getElementsByClassName('container')[0]
+                let startScreen = document.getElementById('start-screen')
+                parentContainer.removeChild(startScreen)
+                game.inBreakOutRoom()
+             }, 2000)
+        }
+
+        
+        timeout()
+         
     }
 }
 
@@ -207,9 +233,9 @@ class Counter {
     }
 
     drawLevelCounter(ctx){
-        ctx.fillStyle = 'pink'
+        ctx.fillStyle = 'yellowgreen'
         ctx.font = '22px Slackey'
-        ctx.fillText(`Level: ${this.levels}`, window.innerWidth - 150, 50)
+        ctx.fillText(`Level: ${this.levels}`, window.innerWidth - 120, 50)
     }
 }
 
@@ -427,7 +453,7 @@ class Game {
     }
 
     stop(ctx){
-        if(this.counterLives.lives === -10) {
+        if(this.counterLives.lives === 0) {
             clearInterval(this.intervalID)
             this.statusStop = true
             this.gameOver(ctx)
