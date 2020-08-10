@@ -104,38 +104,72 @@ class GameBoard {
         let parentContainer = document.getElementsByClassName('container')[0];
         parentContainer.appendChild(startScreen);
 
+        let nav = document.createElement('nav')
+        nav.setAttribute('id', 'nav-bar')
+        let parentStartScreen = document.getElementById('start-screen')
+        parentStartScreen.appendChild(nav)
+        let navTitle = document.createElement('p')
+        navTitle.setAttribute('id', 'nav-title')
+        navTitle.innerHTML = 'Hit me, Spaghetti, one more time...'
+        let parentNav = document.getElementById('nav-bar')
+        parentNav.appendChild(navTitle)
+
+        let middlepart = document.createElement('div')
+        parentStartScreen.appendChild(middlepart)
+        middlepart.setAttribute('id', 'middle-part')
         let titelGame = document.createElement('h1')
         titelGame.innerHTML = 'Hit me, Spaghetti, one more time...'
-        let parentStartScreen = document.getElementById('start-screen')
-        parentStartScreen.appendChild(titelGame)
+        let parentMiddlePart= document.getElementById('middle-part')
+        parentMiddlePart.appendChild(titelGame)
 
         let explanationText1 = document.createElement('p')
         let explanationText2 = document.createElement('p')
+        let explanationText3 = document.createElement('h3')
         explanationText1.innerHTML = 'In a Breakout Room far far away......six brave students gave up their summer.....and autumn.....to become the next best coding ninjas.' 
         explanationText2.innerHTML = 'Since teaching is like throwing spaghetti and hoping some will stick (read: quote teacher)......all you have to do is to throw as much spaghetti at the students as you can. But BE AWARE.....once in a while the teacher and teacher assistant join the Breakout Room......and as you might guess......hitting them will get you into trouble!!'
+        explanationText3.innerHTML = '[You can throw spaghetti by clicking with your mouse]'
        
-        parentStartScreen.appendChild(explanationText1)
-        parentStartScreen.appendChild(explanationText2)
+        parentMiddlePart.appendChild(explanationText1)
+        parentMiddlePart.appendChild(explanationText2)
+        parentMiddlePart.appendChild(explanationText3)
 
         let button = document.createElement('button')
         button.innerHTML = 'Join Breakout Room'
-        parentStartScreen.appendChild(button)
+        parentMiddlePart.appendChild(button)
 
         button.addEventListener('click', () => {
-            parentStartScreen.removeChild(titelGame)
-            parentStartScreen.removeChild(explanationText1)
-            parentStartScreen.removeChild(explanationText2)
-            parentStartScreen.removeChild(button)
+            parentMiddlePart.removeChild(titelGame)
+            parentMiddlePart.removeChild(explanationText1)
+            parentMiddlePart.removeChild(explanationText2)
+            parentMiddlePart.removeChild(explanationText3)
+            parentMiddlePart.removeChild(button)
             this.breakoutRoomLoading()
         })
     }
 
     breakoutRoomLoading(){
         let joinBreakoutRoom = document.createElement('h2')
-        joinBreakoutRoom.innerHTML = 'Please wait, the hosts will let you in soon'
-        let parentStartScreen = document.getElementById('start-screen')
-        parentStartScreen.appendChild(joinBreakoutRoom)
+        joinBreakoutRoom.innerHTML = 'Please wait, the hosts will let you in soon.'
+        let parentMiddlePart = document.getElementById('middle-part')
+        parentMiddlePart.appendChild(joinBreakoutRoom)
 
+        let divImages = document.createElement('div')
+        divImages.setAttribute('id', 'div-images')
+        parentMiddlePart.appendChild(divImages)
+
+        let host1 = document.createElement('img')
+        host1.src = './images/introductionJorg.png'
+        let host2 = document.createElement('img')
+        host2.src = './images/introductionGuido.png'
+
+        let parentImages = document.getElementById('div-images')
+        parentImages.appendChild(host1)
+        parentImages.appendChild(host2)
+
+
+        let fewSecondsMessages = document.createElement('h4')
+        fewSecondsMessages.innerHTML = 'It may take a few moments...'
+        parentMiddlePart.appendChild( fewSecondsMessages)
  
 
         function timeout(){
@@ -146,10 +180,7 @@ class GameBoard {
                 game.inBreakOutRoom()
              }, 2000)
         }
-
-        
         timeout()
-         
     }
 }
 
@@ -323,24 +354,22 @@ class Game {
             }
         }
     
-        this.randomSpeed = 1.5 + (Math.random() * 2) 
+        this.randomSpeed = 2 + (Math.random() * 4) 
         this.randomX =  30 + (Math.random() * (window.innerWidth - 310))
 
-        this.ironhackers.forEach(ironhacker => {
-            const imgBounderies = 260
-            while(this.randomX > ironhacker.x - imgBounderies && this.randomX < ironhacker.x + imgBounderies){
-                console.log(`randomX: ${this.randomX}`)
-                this.randomX = 30 + (Math.random() * (window.innerWidth - 310))
-                console.log(`new randomX: ${this.randomX}`)
-            }
-            return this.randomX 
-        })
+        // this.ironhackers.forEach(ironhacker => {
+        //     const imgBounderies = 260
+        //     while(this.randomX > ironhacker.x - imgBounderies && this.randomX < ironhacker.x + imgBounderies){
+        //         this.randomX = 30 + (Math.random() * (window.innerWidth - 310))
+        //     }
+        //     return this.randomX 
+        // })
 
         this.newIronhacker = new Ironhacker(this.randomImg, true, this.randomX, 0, this.randomSpeed, 250, 141)
 
         this.ironhackers.push(this.newIronhacker)  
-        console.log(this.newIronhacker)
         this.ironhackersClicked.push(this.newIronhacker)
+        this.ironhackersSpeedUp.push(this.newIronhacker)
         this.addTeachers()
     }
 
@@ -352,22 +381,20 @@ class Game {
 
             this.randomImg = this.shuffledIronhackersImgArr[0]
 
-            this.randomSpeed = 1 + (Math.random() * 3)
+            this.randomSpeed = 2 + (Math.random() * 4)
             this.randomX =  230 + (Math.random() * (window.innerWidth - 680))
 
-            this.ironhackers.forEach(ironhacker => {
-                const imgBounderies = 260
-                while(this.randomX > ironhacker.x - imgBounderies && this.randomX < ironhacker.x + imgBounderies){
-                    this.randomX = 230 + (Math.random() * (window.innerWidth - 680))
-                }
-                return this.randomX 
-            })
+            // this.ironhackers.forEach(ironhacker => {
+            //     const imgBounderies = 260
+            //     while(this.randomX > ironhacker.x - imgBounderies && this.randomX < ironhacker.x + imgBounderies){
+            //         this.randomX = 230 + (Math.random() * (window.innerWidth - 680))
+            //     }
+            //     return this.randomX 
+            // })
 
             this.newIronhacker = new Ironhacker(this.randomImg, false, this.randomX, 0, this.randomSpeed, 250, 141)
   
-            this.ironhackers.push(this.newIronhacker)  
-            console.log(this.newIronhacker)
-           
+            this.ironhackers.push(this.newIronhacker)        
             this.ironhackersClicked.push(this.newIronhacker)
             this.ironhackersSpeedUp.push(this.newIronhacker)
         } 
@@ -410,30 +437,30 @@ class Game {
     }
     
     moreSpeedEachLevel (){
-        this.ironhackers.forEach(element => {
+        this.ironhackersSpeedUp.forEach(element => {
             switch(this.counterLevels.levels) {
                 case 1:
-                    this.randomSpeed = 2.5 + (Math.random() * 2)
+                    this.randomSpeed = 3 + (Math.random() * 4)
                     element.speed = this.randomSpeed
                     break;
                 case 2: 
-                    this.randomSpeed = 3.5 + (Math.random() * 2)
+                    this.randomSpeed = 4 + (Math.random() * 4)
                     element.speed = this.randomSpeed
                     break
                 case 3: 
-                    this.randomSpeed = 4.5 + (Math.random() * 2)
+                    this.randomSpeed = 5 + (Math.random() * 4)
                     element.speed = this.randomSpeed
                     break
                 case 4: 
-                    this.randomSpeed = 5.5 + (Math.random() * 2)
+                    this.randomSpeed = 6+ (Math.random() * 4)
                     element.speed = this.randomSpeed
                     break
                 case 5: 
-                    this.randomSpeed = 6.5 + (Math.random() * 2)
+                    this.randomSpeed = 7 + (Math.random() * 4)
                     element.speed = this.randomSpeed
                     break
                 case 6: 
-                    this.randomSpeed = 7.5 + (Math.random() * 2)
+                    this.randomSpeed = 8 + (Math.random() * 4)
                     element.speed = this.randomSpeed
                     break
             }
@@ -530,8 +557,6 @@ class Game {
                 if (i < txt.length) requestAnimationFrame(loop)
             }
             })();
-
-        
     }
 
 
