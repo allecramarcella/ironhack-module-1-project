@@ -41,9 +41,9 @@ h1 {
     font-family: 'Slackey';
     color: yellowgreen;
     text-align: center;
-    font-size: 7vw;
+    font-size: 7vh;
     line-height: 95%;
-    margin: 8% 20% 5% 20%;
+    margin: 8% 30% 5% 30%;
 }
 
 #start-screen p {
@@ -141,11 +141,12 @@ h1 {
     padding: 0 10px 0 16px;
 }
 
-@media (max-width: 785px) {
+@media (min-width: 631px) and (max-width: 785px) {
     .game-border-bottom div:nth-child(2) div:nth-child(2), 
     .game-border-bottom div:nth-child(2) div:nth-child(3) {
         display: none;
     }
+
 }
 
 @media (max-width: 630px) {
@@ -153,6 +154,13 @@ h1 {
     .game-border-bottom div:nth-child(2) div:nth-child(3),
     .game-border-bottom div:nth-child(2) div:nth-child(4) {
         display: none;
+    }
+
+    
+    h1{
+        font-size: 5vh;
+        line-height: 95%;
+        margin: 30% 25% 10% 25%;
     }
 }
 

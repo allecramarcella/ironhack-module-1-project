@@ -1,12 +1,12 @@
 // images Ironhackers
 const marcella = new Image()
-marcella.src = './images/Marcella.png'
+marcella.src = './images/Marcella2.png'
 
 const yuka = new Image()
 yuka.src = './images/Yuka.png'
 
 const lisette = new Image()
-lisette.src = './images/Lisette.png'
+lisette.src = './images/Lisette2.png'
 
 const anna = new Image()
 anna.src = './images/Anna.png'
@@ -50,10 +50,18 @@ yukaClicked.src = './images/yuka clicked.png'
 
 // clicked Images teachers
 const jorgClicked = new Image()
-jorgClicked.src = './images/jorg clicked.png'
+jorgClicked.src = './images/jorgclicked.png'
 
-// const guidoClicked = new Image()
-// guidoClicked.src = 
+const guidoClicked = new Image()
+guidoClicked.src =  './images/guidoclicked.png'
+
+//introduction pictures teachers
+const jorgIntro = new Image()
+jorgIntro.src = './images/introductionJorg.png'
+
+const guidoIntro = new Image()
+guidoIntro.src =  './images/introductionGuido.png'
+
 
 // //background img
 // const backgroundImg = new Image()
@@ -83,10 +91,6 @@ class GameBoard {
         this.setCtx(canvas)
         this.resizeCanvas()
         this.startScreen()
-        // this.drawTitle()
-        // this.drawLongText()
-        // this.drawStartButton()
-        // this.addEventListenerStart()
     }
     
     setCtx(canvas) {
@@ -94,7 +98,6 @@ class GameBoard {
     }
 
     startScreen(){
-        // create html element start screen
         let startScreen = document.createElement('div')
         startScreen.setAttribute('id', 'start-screen')
 
@@ -124,14 +127,12 @@ class GameBoard {
             parentStartScreen.removeChild(explanationText2)
             parentStartScreen.removeChild(button)
             this.breakoutRoomLoading()
-           
-            
         })
     }
 
     breakoutRoomLoading(){
         let joinBreakoutRoom = document.createElement('h2')
-        joinBreakoutRoom.innerHTML = 'Joining Breakout Room'
+        joinBreakoutRoom.innerHTML = 'Please wait, the hosts will let you in soon'
         let parentStartScreen = document.getElementById('start-screen')
         parentStartScreen.appendChild(joinBreakoutRoom)
 
@@ -255,6 +256,8 @@ class Game {
         this.randomSpeed
         this.randomX 
         this.statusStop = false
+        this.previousXPosition = 0
+        
     }
 
     start() {
@@ -263,7 +266,7 @@ class Game {
 
     inBreakOutRoom(){
         requestAnimationFrame(this.gameLoop.bind(this))
-        this.intervalID = window.setInterval(this.addIronhacker.bind(this), 2500)
+        this.intervalID = window.setInterval(this.addIronhacker.bind(this), 1500)
     }
 
    
@@ -290,6 +293,7 @@ class Game {
             requestAnimationFrame(this.gameLoop.bind(this))
         }
     }
+
 
     shuffleIronhackersImgArray(array) {
         for (let i = array.length -1 ; i >= 0; i--) {
@@ -323,18 +327,19 @@ class Game {
         this.randomX =  30 + (Math.random() * (window.innerWidth - 310))
 
         this.ironhackers.forEach(ironhacker => {
-            if(ironhacker.randomX === this.randomX) {
-                thisUniqueRandomX = 30 + (Math.random() * (window.innerWidth - 310))
-                this.randomX = thisUniqueRandomX
-            } else {
-                this.randomX = this.randomX
+            const imgBounderies = 260
+            while(this.randomX > ironhacker.x - imgBounderies && this.randomX < ironhacker.x + imgBounderies){
+                console.log(`randomX: ${this.randomX}`)
+                this.randomX = 30 + (Math.random() * (window.innerWidth - 310))
+                console.log(`new randomX: ${this.randomX}`)
             }
+            return this.randomX 
         })
-
 
         this.newIronhacker = new Ironhacker(this.randomImg, true, this.randomX, 0, this.randomSpeed, 250, 141)
 
         this.ironhackers.push(this.newIronhacker)  
+        console.log(this.newIronhacker)
         this.ironhackersClicked.push(this.newIronhacker)
         this.addTeachers()
     }
@@ -348,38 +353,21 @@ class Game {
             this.randomImg = this.shuffledIronhackersImgArr[0]
 
             this.randomSpeed = 1 + (Math.random() * 3)
-            this.randomX =  30 + (Math.random() * (window.innerWidth - 310))
+            this.randomX =  230 + (Math.random() * (window.innerWidth - 680))
 
-        
-            // this.ironhackers.forEach((ironhacker, index) => {
-            //     console.log((ironhacker.x- (ironhacker.width * 2 + 10)))
-            //     console.log(ironhacker.x)
-            //     console.log(ironhacker)
-            //     console.log(index)
-            //     if(this.randomX > (ironhacker.x  - (ironhacker.width * 2 + 10)) && this.randomX < ironhacker.x + (ironhacker.width + 10) ) {
-            //         let thisUniqueRandomX = 30 + (Math.random() * (window.innerWidth - 310))
-            //         this.randomX = thisUniqueRandomX
-            //     } else {
-            //         this.randomX = this.randomX
-            //     }
-            // })
-
-            // this.ironhackers.forEach(ironhacker => {
-            //     if(ironhacker.randomX === this.randomX) {
-            //         if(ironhacker.speed === this.randomSpeed) {
-            //             thisUniqueRandomSpeed = this.randomSpeed = 1 + (Math.random() * 3)
-            //             this.randomSpeed = thisUniqueRandomSpeed
-            //         }  
-            //     } else {
-            //         this.randomSpeed= this.randomSpeed
-            //     }
-            // })
-
-           
+            this.ironhackers.forEach(ironhacker => {
+                const imgBounderies = 260
+                while(this.randomX > ironhacker.x - imgBounderies && this.randomX < ironhacker.x + imgBounderies){
+                    this.randomX = 230 + (Math.random() * (window.innerWidth - 680))
+                }
+                return this.randomX 
+            })
 
             this.newIronhacker = new Ironhacker(this.randomImg, false, this.randomX, 0, this.randomSpeed, 250, 141)
-        
+  
             this.ironhackers.push(this.newIronhacker)  
+            console.log(this.newIronhacker)
+           
             this.ironhackersClicked.push(this.newIronhacker)
             this.ironhackersSpeedUp.push(this.newIronhacker)
         } 
@@ -595,15 +583,15 @@ class Game {
                     }
 
                     function img1secBigAfterClick() {
-                        ironhacker.x -= 60
-                        ironhacker.width += 120
-                        ironhacker.height += 120
+                        ironhacker.x -= 150
+                        ironhacker.width += 300
+                        ironhacker.height += 300
 
                         setTimeout(function(){
-                            ironhacker.x += 50
-                            ironhacker.width -= 100
-                            ironhacker.height -= 100
-                         }, 250)
+                            ironhacker.x += 150
+                            ironhacker.width -= 300
+                            ironhacker.height -= 300
+                         }, 150)
                     } 
                 }
             })
