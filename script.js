@@ -186,18 +186,23 @@ class GameBoard {
         timeout()
     }
 
-    buttonLeave(){
-        let buttonLeave = document.getElementById('leave-button')
-        buttonLeave.addEventListener('click', () => {
-            game.stop()
-            this.startScreen()
-        })
-    }
 
     askForHelpButton(){
         let askForHelp =document.getElementById('help-button')
         askForHelp.addEventListener('click', () => {
             alert("Sorry, no help available...don't worry...you can do this!!");
+        })
+    }
+
+    buttonLeave(){
+        let buttonLeave = document.getElementById('leave-button')
+        buttonLeave.addEventListener('click', () => {
+            const canvas = document.getElementById('canvas')
+            this.ctx = canvas.getContext('2d')
+            game.statusStop = true
+            this.ctx.clearRect(0, 0, canvas.width, canvas.height)
+            clearInterval(this.intervalID)
+            nextGame.start()
         })
     }
 
@@ -272,9 +277,9 @@ class Counter {
     }
 
     subtractLives(isStudent){
-        if(isStudent === true && this.lives >= 0) {
+        if(isStudent === true) {
             this.lives -= 1
-        } else if (isStudent === false && this.lives >= 0){
+        } else if (isStudent === false){
             this.lives -= 2
         } 
         // let soundLivesDown = new AddSound('./Sounds/livesdown.mp3')
@@ -323,8 +328,6 @@ class Game {
         this.intervalID = window.setInterval(this.addIronhacker.bind(this), 1000)
     }
 
-   
-
     gameLoop(){
         const ctx = this.gameBoard.ctx
         ctx.clearRect(0, 0, canvas.width, canvas.height)
@@ -345,7 +348,7 @@ class Game {
 
         if (!this.statusStop) {
             requestAnimationFrame(this.gameLoop.bind(this))
-        }
+        } 
     }
 
 
@@ -378,41 +381,6 @@ class Game {
         this.randomSpeed = 2.5 + (Math.random() * 3) 
         this.randomX =  30 + (Math.random() * (window.innerWidth - 310))
 
-        // this.ironhackers.forEach(ironhacker => {
-        //     const imgBounderies = 260
-        //     while(this.randomX > ironhacker.x - imgBounderies && this.randomX < ironhacker.x + imgBounderies){
-        //         this.randomX = 30 + (Math.random() * (window.innerWidth - 310))
-        //     }
-        //     return this.randomX 
-        // })
-
-        // for (let i = this.ironhackers.length -1; i>= this.ironhackers.length -2; i--){
-        //     const imgBounderies = 260
-
-        //     while(this.randomX > i.x - imgBounderies && this.randomX < i.x + imgBounderies){
-        //         this.randomX = 30 + (Math.random() * (window.innerWidth - 310))
-        //     }
-        //     return this.randomX 
-        // }
-
-        // console.log(this.randomX)
-        // this.ironhackers.forEach(element => {
-        //     this.randomXArr.push(element)
-        // })
-
-        // if(this.randomXArr.length > 0 ){
-        //     const lastItemArr = this.randomXArr.splice(-1)
-        //     // console.log(lastItemArr)
-        //     // console.log(this.newIronhacker.x)
-        //     const imgBounderies = 260
-        //     while(this.randomX > this.newIronhacker.x - imgBounderies && this.randomX < this.newIronhacker.x + imgBounderies){
-        //         console.log('I have been called')
-        //         this.randomX = 30 + (Math.random() * (window.innerWidth - 310))
-        //     }
-        //     console.log(`New ${this.randomX}`)
-        //     return this.randomX
-        // } 
-
         this.newIronhacker = new Ironhacker(this.randomImg, true, this.randomX, 0, this.randomSpeed, 250, 141)
 
         this.ironhackers.push(this.newIronhacker)  
@@ -431,6 +399,24 @@ class Game {
 
             this.randomSpeed = 2 + (Math.random() * 4)
             this.randomX =  230 + (Math.random() * (window.innerWidth - 680))
+
+            // this.ironhackers.forEach(element => {
+            //     this.randomXArr.push(element)
+            // })
+    
+            // if(this.randomXArr.length > 0){
+            //     const lastArrItem = this.randomXArr.splice(-1)
+
+            //     const imgBounderies = 50
+            //     while(this.randomX > this.newIronhacker.x - imgBounderies && this.randomX < this.newIronhacker.x + imgBounderies){
+            //         console.log(this.newIronhacker.x)
+            //         console.log(this.randomX)
+            //         this.randomX = 230 + (Math.random() * (window.innerWidth - 680))
+            //     }
+            //     console.log(`New ${this.randomX}`)
+            //     this.randomXArr.push(lastArrItem)
+            //     return this.randomX
+            // } 
  
 
             this.newIronhacker = new Ironhacker(this.randomImg, false, this.randomX, 0, this.randomSpeed, 250, 141)
@@ -509,7 +495,7 @@ class Game {
     }
 
     stop(ctx){
-        if(this.counterLives.lives <= 0) {
+        if(this.counterLives.lives === 0) {
             clearInterval(this.intervalID)
             this.statusStop = true
             this.gameOver(ctx)
@@ -517,11 +503,7 @@ class Game {
             clearInterval(this.intervalID)
             this.statusStop = true
             this.winner(ctx)
-        } else if (document.getElementById('leave-button').clicked == true) {
-            clearInterval(this.intervalID)
-            this.statusStop = true
-  
-        }
+        } 
     }
 
     gameOver(ctx){
@@ -699,7 +681,9 @@ class AddSound {
   }
 
 const game = new Game()
-game.start()
+const nextGame = new Game()
 
+game.start()
+// nextGame.start()
 
 
