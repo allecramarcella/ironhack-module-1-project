@@ -50,7 +50,7 @@ yukaClicked.src = './images/yukaclicked.png'
 
 // clicked Images teachers
 const jorgClicked = new Image()
-jorgClicked.src = './images/jorgclicked.png'
+jorgClicked.src = './images/guidoclicked.png'
 
 const guidoClicked = new Image()
 guidoClicked.src =  './images/guidoclicked.png'
@@ -62,7 +62,11 @@ jorgIntro.src = './images/introductionJorg.png'
 const guidoIntro = new Image()
 guidoIntro.src =  './images/introductionGuido.png'
 
+// sounds
 
+
+
+// canvas and ctx
 const canvas = document.getElementById('canvas')
 const ctx = canvas.getContext('2d')
 
@@ -76,9 +80,17 @@ class GameBoard {
         window.addEventListener('resize', this.resizeCanvas, false);
         this.resizeCanvas()
         this.startScreen()
-        // this.buttonLeave()
+        this.buttonLeave()
         this.askForHelpButton()
     }
+
+    initialiseTryAgain() {
+        window.addEventListener('resize', this.resizeCanvas, false);
+        this.resizeCanvas()
+        this.buttonLeave()
+        this.askForHelpButton()
+    }
+
 
     resizeCanvas(){
         canvas.width = window.innerWidth
@@ -172,17 +184,12 @@ class GameBoard {
         })
     }
 
-    // buttonLeave(){
-    //     let buttonLeave = document.getElementById('leave-button')
-    //     buttonLeave.addEventListener('click', () => {
-    //         const canvas = document.getElementById('canvas')
-    //         this.ctx = canvas.getContext('2d')
-    //         game.statusStop = true
-    //         this.ctx.clearRect(0, 0, canvas.width, canvas.height)
-    //         clearInterval(this.intervalID)
-    //         nextGame.start()
-    //     })
-    // }
+    buttonLeave(){
+        let buttonLeave = document.getElementById('leave-button')
+        buttonLeave.addEventListener('click', () => {
+            document.location.reload();
+        })
+    }
 
 }
 
@@ -224,10 +231,14 @@ class Counter {
     }
 
     subtractLives(isStudent){
-        if(isStudent) {
+        if(isStudent === true) {
             this.lives -= 1
-        } else if (!isStudent){
-            this.lives -= 2
+        } else if (isStudent === false){
+            if(this.lives >= 2){
+                this.lives -= 2
+            } else {
+                this.lives -= 1
+            }
         } 
         // let soundLivesDown = new AddSound('./Sounds/livesdown.mp3')
         // soundLivesDown.play()
@@ -260,7 +271,8 @@ class Game {
         this.randomX 
         this.randomXArr = []
         this.statusStop = false
-        this.mySound        
+        this.mySound   
+        this.called     
     }
 
     start() {
@@ -268,6 +280,7 @@ class Game {
     }
 
     inBreakOutRoom(){
+        soundInBreakoutRoom.play()
         requestAnimationFrame(this.gameLoop.bind(this))
         this.intervalID = window.setInterval(this.addStudent.bind(this), 1000)
     }
@@ -276,7 +289,6 @@ class Game {
         ctx.clearRect(0, 0, canvas.width, canvas.height)
         this.addListeners()
 
-        console.log(this.ironhackers)
         this.ironhackers.forEach(ironhacker => {
             ironhacker.draw(ctx)
             ironhacker.move() 
@@ -291,26 +303,6 @@ class Game {
         } 
     }
 
-    // clearIronhackersArr (){
-    //     for(let i = 0; i < this.ironhackers.length; i ++){
-    //         let numberOfTeachers = 0
-    //         if(this.newIronhacker.isStudent === false) {
-    //             numberOfTeachers += 1
-    //         }
-    //         console.log(`number of Teachers : ${numberOfTeachers}`)
-
-    //         if(this.ironhackers.length <= 6 + numberOfTeachers){
-    //             this.ironhackers[i].draw(ctx)
-    //             this.ironhackers[i].move() 
-    //         } else {
-    //             console.log(`ironhackers length: ${this.ironhackers.length}`)
-    //             this.ironhackers.splice(0, this.ironhackers.length)
-    //             console.log(`clear arr: ${this.ironhackers.length}`)
-    //         }
-    //     }
-    // }
-
-
     shuffleIronhackersImgArray(array) {
         for (let i = array.length -1 ; i >= 0; i--) {
             let j = Math.floor(Math.random() * (i + 1));
@@ -324,7 +316,7 @@ class Game {
     
     addStudent(){
         if(this.addTeachers(true)) {
-            this.addTeachers(called)
+            this.addTeachers()
         } else {
             this.shuffleIronhackersImgArray(ironhackersImgArray)
         
@@ -415,8 +407,9 @@ class Game {
         if(this.counterLives.lives === 0) {
             clearInterval(this.intervalID)
             this.statusStop = true
+            soundInBreakoutRoom.stop()
             this.gameOver(ctx)
-        } else if (this.counterLevels.levels >= 6 && this.counterLevels.students % 5 === 0) {
+        } else if (this.counterLevels.levels >= 2 && this.counterLevels.students % 5 === 0) {
             clearInterval(this.intervalID)
             this.statusStop = true
             this.winner(ctx)
@@ -429,124 +422,98 @@ class Game {
 
         ctx.clearRect(0,0, window.innerWidth, window.innerHeight)
         this.updateCounters(ctx)
-    //     ctx.font = '8vw Slackey'
-    
-    //     let dashLen = 220
-    //     let dashOffset = dashLen
-    //     const speed = 10
-    //     const txt = "Game Over"
-    //     const lineWidth = 3
-    //     let txtWidth = ctx.measureText(txt).width + (lineWidth * 8) 
-    //     let x = (window.innerWidth / 2) - (txtWidth / 2)
-    //     const y = window.innerHeight / 2 - 100
-    //     let i = 0
-        
-    //     ctx.lineWidth = 3
-    //     ctx.lineJoin = "miter"
-    //     ctx.globalAlpha = 2/3
-    //     ctx.strokeStyle = '#ef861f'
-    //     ctx.fillStyle = '#ef861f';
+
+        const gameOverScreen = document.createElement('div')
+        gameOverScreen.setAttribute('id', 'gameOver-screen')
+
+        const divBefore = document.getElementsByClassName('game-border-top')[0]
+        const parentContainer = document.getElementById('container')
+        parentContainer.insertBefore(gameOverScreen, divBefore)
+
+        const title = document.createElement('h2')
+        title.innerHTML = 'Game Over' 
        
+        gameOverScreen.appendChild(title)
 
-    //     (function loop() {
-    //         ctx.setLineDash([dashLen - dashOffset, dashOffset - speed]) 
-    //         dashOffset -= speed                                  
-    //         ctx.strokeText(txt[i], x, y)                             
 
-    //         if (dashOffset > 0) requestAnimationFrame(loop)        
-    //         else {
-    //             ctx.fillText(txt[i], x, y)                               
-    //             dashOffset = dashLen                                   
-    //             x += ctx.measureText(txt[i++]).width + ctx.lineWidth 
-    //             ctx.setTransform(1, 0, 0, 1, 0, 3 * Math.random())        
-    //             ctx.rotate(Math.random() * 0.005)                        
-    //             if (i < txt.length) requestAnimationFrame(loop)
-    //         }
-    //         })();
-        // const gameOverScreen = document.createElement('div')
-        // gameOverScreen.setAttribute('id', 'gameOver-screen')
+        function timeout(){
+            setTimeout(function(){
+                const divButtons = document.createElement('div')
+                divButtons.setAttribute('id', 'div-buttons')
+                gameOverScreen.appendChild(divButtons)
 
-        // const divBefore = document.getElementsByClassName('game-border-top')[0]
-        // const parentContainer = document.getElementById('container')
-        // parentContainer.insertBefore(gameOverScreen, divBefore)
+                const buttonPlayAgain = document.createElement('button')
+                buttonPlayAgain.innerHTML = 'Try again'
+                divButtons.appendChild(buttonPlayAgain)
 
-        // const title = document.createElement('h2')
-        // // let explanationText2 = document.createElement('p')
-        // // let explanationText3 = document.createElement('h3')
-        // title.innerHTML = 'Game Over' 
-        // // explanationText2.innerHTML = 'Since teaching is like throwing spaghetti and hoping some will stick (read: quote teacher)......all you have to do is to throw as much spaghetti at the students as you can. But BE AWARE.....once in a while the teacher and teacher assistant join the Breakout Room......and as you might guess......hitting them will get you into trouble!!'
-        // // explanationText3.innerHTML = '[You can throw spaghetti by clicking with your mouse]'
-    
-        // gameOverScreen.appendChild(title)
-        // // parentMiddlePart.appendChild(explanationText2)
-        // // parentMiddlePart.appendChild(explanationText3)
+                buttonPlayAgain.addEventListener('click', () => {
+                    document.location.reload();
+                    // this.gameBoard.initialiseTryAgain()
+                    this.inBreakOutRoom()
+                })
 
-        // const textWrapper = document.getElementById('gameOver-screen');
-        // textWrapper.innerHTML = textWrapper.textContent.replace(/\S/g, "<span class='letter'>$&</span>");
+                const buttonQuite = document.createElement('button')
+                buttonQuite.innerHTML = 'Quite game'
+                divButtons.appendChild(buttonQuite)
 
-        // anime.timeline({loop: true})
-        // .add({
-        //     targets: '#gameOver-screen .letter',
-        //     scale: [4,1],
-        //     opacity: [0,1],
-        //     translateZ: 0,
-        //     easing: "easeOutExpo",
-        //     duration: 950,
-        //     delay: (el, i) => 70*i
-        // }).add({
-        //     targets: '#gameOver-screen',
-        //     opacity: 0,
-        //     duration: 1000,
-        //     easing: "easeOutExpo",
-        //     delay: 1000
-        // });
-        
+                buttonQuite.addEventListener('click', () => {
+                    document.location.reload();
+                })
+             }, 2000)
+        }
+        timeout()
 
     }
     
-    // winner(ctx){
-    //     ctx.clearRect(0,0, window.innerWidth, window.innerHeight)
-    //     this.updateLeves(ctx)
-    //     // this.updateLives(ctx)
-    //     ctx.font = '8vw Slackey'
-    
-    //     let dashLen = 220
-    //     let dashOffset = dashLen
-    //     const speed = 10
-    //     const txt = "You Rock!"
-    //     const lineWidth = 3
-    //     let txtWidth = ctx.measureText(txt).width + (lineWidth * 8) 
-    //     let x = (window.innerWidth / 2) - (txtWidth / 2)
-    //     const y = window.innerHeight / 2 - 100
-    //     let i = 0
-        
-    //     ctx.lineWidth = 3
-    //     ctx.lineJoin = "miter"
-    //     ctx.globalAlpha = 2/3
-    //     ctx.strokeStyle = '#ef861f'
-    //     ctx.fillStyle = '#ef861f';
+    winner(ctx){
+        ctx.clearRect(0,0, window.innerWidth, window.innerHeight)
+        this.updateCounters(ctx)
+
+        const winnerScreen  = document.createElement('div')
+        winnerScreen.setAttribute('id', 'winner-screen')
+
+        const divBefore = document.getElementsByClassName('game-border-top')[0]
+        const parentContainer = document.getElementById('container')
+        parentContainer.insertBefore(winnerScreen, divBefore)
+
+        const title = document.createElement('h2')
+        title.innerHTML = 'You rock!' 
+        const text = document.createElement('p')
+        text.innerHTML = 'Thank you for making us even smarter!' 
        
-
-    //     (function loop() {
-    //         ctx.setLineDash([dashLen - dashOffset, dashOffset - speed]) 
-    //         dashOffset -= speed                                  
-    //         ctx.strokeText(txt[i], x, y)                             
-
-    //         if (dashOffset > 0) requestAnimationFrame(loop)        
-    //         else {
-    //             ctx.fillText(txt[i], x, y)                               
-    //             dashOffset = dashLen                                   
-    //             x += ctx.measureText(txt[i++]).width + ctx.lineWidth 
-    //             ctx.setTransform(1, 0, 0, 1, 0, 3 * Math.random())        
-    //             ctx.rotate(Math.random() * 0.005)                        
-    //             if (i < txt.length) requestAnimationFrame(loop)
-    //         }
-    //         })();
-    // }
+        winnerScreen.appendChild(title)
+    
+        function timeout(){
+            setTimeout(function(){
+                winnerScreen.appendChild(text)
+                const divButtons = document.createElement('div')
+                divButtons.setAttribute('id', 'div-buttons')
+                winnerScreen.appendChild(divButtons)
+        
+                const buttonPlayAgain = document.createElement('button')
+                buttonPlayAgain.innerHTML = 'Play again'
+                divButtons.appendChild(buttonPlayAgain)
+        
+                buttonPlayAgain.addEventListener('click', () => {
+                    document.location.reload();
+                    // this.gameBoard.initialiseTryAgain()
+                    this.inBreakOutRoom()
+                })
+        
+                const buttonQuite = document.createElement('button')
+                buttonQuite.innerHTML = 'Quite game'
+                divButtons.appendChild(buttonQuite)
+        
+                buttonQuite.addEventListener('click', () => {
+                    document.location.reload();
+                })
+             }, 2000)
+        }
+        timeout()
+    }
 
 
     addListeners() {
-
         const canvasLeft = canvas.offsetLeft + canvas.clientLeft
         const canvasTop = canvas.offsetTop + canvas.clientTop
 
@@ -631,7 +598,7 @@ class AddSound {
   }
 
 const game = new Game()
-const nextGame = new Game()
+const soundInBreakoutRoom = new AddSound('./Sounds/title.mp3')
 
 game.start()
 // nextGame.start()
