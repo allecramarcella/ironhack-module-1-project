@@ -50,7 +50,7 @@ yukaClicked.src = './images/yukaclicked.png'
 
 // clicked Images teachers
 const jorgClicked = new Image()
-jorgClicked.src = './images/guidoclicked.png'
+jorgClicked.src = './images/jorgclicked.png'
 
 const guidoClicked = new Image()
 guidoClicked.src =  './images/guidoclicked.png'
@@ -216,6 +216,8 @@ class Ironhacker {
 class Counter {
     constructor(){
         this.students = 0
+        this.missedStudents = 0
+        this.hitTeachers = 0
         this.levels = 0
         this.lives = 6
     }
@@ -226,8 +228,15 @@ class Counter {
             this.levels += 1
             let soundLevelUp = new AddSound('./Sounds/levelup.mp3')
             soundLevelUp.play()
-
         }
+    }
+
+    studentsNotHit(){
+        this.missedStudents += 1
+    }
+
+    teachersHit(){
+        this.hitTeachers += 1
     }
 
     subtractLives(isStudent){
@@ -315,7 +324,7 @@ class Game {
   
     
     addStudent(){
-        const randomNumber = 0 + Math.floor(Math.random() * 10)
+        const randomNumber = 0 + Math.floor(Math.random() * 3)
         if(randomNumber === 1) {
             this.shuffleIronhackersImgArray(teachersImgArray)
             this.randomImg = this.shuffledIronhackersImgArr[0]
@@ -375,11 +384,12 @@ class Game {
                 if (element.img.src.indexOf('clicked') <= 0 && element.isStudent === true){
                     this.counterLives.subtractLives(true)
                     this.counterLives.drawLivesCounter(ctx)
+                    this.counterLives.studentsNotHit()
                 } 
-                
                 if (element.img.src.indexOf('clicked') >= 0 && element.isStudent === false) {
                     this.counterLives.subtractLives(false)
                     this.counterLives.drawLivesCounter(ctx)
+                    this.counterLives.teachersHit()
                 }
                 this.ironhackers.splice(index, 1)
             }
@@ -438,12 +448,25 @@ class Game {
 
         const title = document.createElement('h2')
         title.innerHTML = 'Game Over' 
-       
+        const text = document.createElement('p')
+        text.innerHTML = 'No one said throwing spaghetti was easy..' 
+        const missedStudents = document.createElement('p')
+        missedStudents.innerHTML = `Missed students: ${this.counterLives.missedStudents}`     
+        const hitTeachers = document.createElement('p')
+        hitTeachers.innerHTML = `Hit teachers: ${this.counterLives.hitTeachers}`    
         gameOverScreen.appendChild(title)
 
 
         function timeout(){
             setTimeout(function(){
+                const divScores = document.createElement('div')
+                divScores.setAttribute('class', 'div-scores')
+                gameOverScreen.appendChild(divScores)
+
+                gameOverScreen.appendChild(text)
+                gameOverScreen.appendChild(missedStudents)
+                gameOverScreen.appendChild(hitTeachers)
+
                 const divButtons = document.createElement('div')
                 divButtons.setAttribute('id', 'div-buttons')
                 gameOverScreen.appendChild(divButtons)
