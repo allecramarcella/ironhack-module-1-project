@@ -315,8 +315,14 @@ class Game {
   
     
     addStudent(){
-        if(this.addTeachers(true)) {
-            this.addTeachers()
+        const randomNumber = 0 + Math.floor(Math.random() * 10)
+        if(randomNumber === 1) {
+            this.shuffleIronhackersImgArray(teachersImgArray)
+            this.randomImg = this.shuffledIronhackersImgArr[0]
+
+            this.randomX =  230 + (Math.random() * (window.innerWidth - 680))
+            this.newIronhacker = new Ironhacker(this.randomImg, false, this.randomX, 0, this.randomSpeed, 250, 141)
+            this.ironhackers.push(this.newIronhacker)     
         } else {
             this.shuffleIronhackersImgArray(ironhackersImgArray)
         
@@ -340,20 +346,20 @@ class Game {
         
     }
 
-    addTeachers(called){
-        this.called = called
-        const randomNumber = 0 + Math.floor(Math.random() * 7)
-        if(randomNumber === 1) {
-            this.shuffleIronhackersImgArray(teachersImgArray)
-            this.randomImg = this.shuffledIronhackersImgArr[0]
+    // addTeachers(called){
+    //     this.called = called
+    //     const randomNumber = 0 + Math.floor(Math.random() * 7)
+    //     if(randomNumber === 1) {
+    //         this.shuffleIronhackersImgArray(teachersImgArray)
+    //         this.randomImg = this.shuffledIronhackersImgArr[0]
 
-            this.randomX =  230 + (Math.random() * (window.innerWidth - 680))
-            this.newIronhacker = new Ironhacker(this.randomImg, false, this.randomX, 0, this.randomSpeed, 250, 141)
-            this.ironhackers.push(this.newIronhacker)     
+    //         this.randomX =  230 + (Math.random() * (window.innerWidth - 680))
+    //         this.newIronhacker = new Ironhacker(this.randomImg, false, this.randomX, 0, this.randomSpeed, 250, 141)
+    //         this.ironhackers.push(this.newIronhacker)     
 
-            return  this.called === true   
-        } 
-    }
+    //         return  this.called === true   
+    //     } 
+    // }
 
 
     updateCounters(ctx){
