@@ -1,6 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Baloo+Paaji+2:wght@500&family=Slackey&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Sniglet&display=swap');
 
+
 /* general  */
 * { 
     margin:0; 
@@ -10,6 +11,7 @@
 html, body { 
     width:100%; 
     height:100%; 
+
 } 
 
 button:focus {
@@ -29,27 +31,12 @@ button:focus {
     top: 0;
     width: 100%;
     height: 100%;
-    background-color: white;
+    /* background-color: white; */
+    background:linear-gradient(10deg, rgba(244,235,160,1) 43%,rgba(192,250,202,1) 43%);
     border: none;
 }
 
-#nav-bar{
-    width: 100%;
-    height: 60px;
-    background-color: white;
-    border-bottom: 1.5px solid rgb(233, 231, 231);
-}
-
-#nav-title {
-    color: #1a8090;
-    text-align: left;
-    padding: 22px 0 0 40px;
-    font-family: 'Slackey';
-    font-size: 15px;
-}
-
 #middle-part {
-    background-color: #e8f2f7;
     width: 100%;
     height: 100%;
     position: relative;
@@ -60,14 +47,16 @@ button:focus {
     /* margin-bottom: 50px; */
 }
 
+
 h1 {
     font-family: 'Slackey';
-    color: #1a8090;
+    color: #f4829a;
     text-align: center;
     font-size: 4vh;
     line-height: 95%;
     padding: 5% 15% 0% 15%;
 }
+
 
 #middle-part p {
     font-family:  'Open Sans', sans-serif;
@@ -84,7 +73,7 @@ h1 {
     text-align: center;
     font-size: 1.5vh;
     line-height: 200%;
-    color: #1a8090;
+    color: #f1a725;
     font-weight: 400;
 }
 
@@ -92,9 +81,9 @@ h1 {
     font-family: 'Open Sans';
     font-size: 1.5vh;
     background-color: transparent;
-    border: 1px solid #ef861f;
+    border: 1px solid #f4829a;
     padding: 15px 30px;
-    color:#ef861f;
+    color: #f4829a;
     border-radius: 30px;
     margin-bottom: 10%;
     text-decoration:  none;
@@ -136,23 +125,23 @@ h1 {
 
 /* canvas */
 #canvas {
-    background-color: black;
+    background:linear-gradient(10deg, rgba(244,235,160,1) 43%,rgba(192,250,202,1) 43%);
     display: block;
     cursor: url(./icons/cursor_spaghetti.cur), url(./icons/cursor_spaghetti.png), none;
 }
 
 /* top border breakout room */
 .game-border-top{
-    background-color: #383b41;
-    border-top: 0.5px solid #818488; 
+    background-color: #f4829a;
+    border-bottom: 1px solid lightgray; 
     border-top-left-radius: 5px;
     border-top-right-radius: 5px;
     height: 22px;
 }
 
 .game-border-top p {
-    color: lightgray;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    color: white;
+    font-family: 'Slackey';
     font-size: 0.8rem;
     text-align: center;
     padding-top: 3px;
@@ -161,8 +150,8 @@ h1 {
 
 /* breakout room buttons */
 .game-border-bottom{
-    background-color: #181818;
-    color: #a6a6a6;
+    background-color: #f4829a;
+    color: white;
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
     font-size: 0.7rem;
     text-align: center;
@@ -171,6 +160,8 @@ h1 {
     justify-content: space-between;
     align-items: center;
     padding: 0 25px;
+    border-top: 1px solid lightgrey;
+
 }
 
 .game-border-bottom img {
@@ -191,11 +182,11 @@ h1 {
 
 .game-border-bottom button {
     /* margin-right: 30px; */
-    background-color: #1a8090;
+    background-color: #4dd3d5;
     border: none;
     border-radius: 8px;
     color: white;
-    padding: 5px 8px;
+    padding: 8px 12px;
     text-align: center;
     text-decoration: none;
     display: inline-block;
@@ -206,6 +197,23 @@ h1 {
 
 #first-icons img{
     padding: 0 10px 0 16px;
+}
+
+/* gameover screen */
+#gameOver-screen {
+    position: absolute;
+    font-weight: 900;
+    color: rgba(244,235,160,1) ;
+    text-align: center;
+    font-family: 'Slackey';
+    left: 50%;
+    top: 50%;
+    font-size: 6em;
+  }
+  
+#gameOver-screen .letter {
+    display: inline-block;
+    line-height: 1em;
 }
 
 
