@@ -62,14 +62,18 @@ jorgIntro.src = './images/introductionJorg.png'
 const guidoIntro = new Image()
 guidoIntro.src =  './images/introductionGuido.png'
 
-// sounds
-
-
 
 // canvas and ctx
 const canvas = document.getElementById('canvas')
 const ctx = canvas.getContext('2d')
 
+//function reload Breakout Room without starting screen and loading screen
+function playAgain(){
+    sessionStorage.setItem('reloading',"false");
+    window.location.reload(false);
+}
+
+// class game board
 class GameBoard {
     constructor() {
         this.width = canvas.width
@@ -79,18 +83,18 @@ class GameBoard {
     initialise() {
         window.addEventListener('resize', this.resizeCanvas, false);
         this.resizeCanvas()
-        this.startScreen()
-        this.buttonLeave()
-        this.askForHelpButton()
+        if (sessionStorage.getItem('reloading') === "false") {
+            sessionStorage.clear()
+            game.inBreakOutRoom()
+            this.buttonLeave()
+            this.askForHelpButton()
+        } else {
+            sessionStorage.clear()
+            this.startScreen()
+            this.buttonLeave()
+            this.askForHelpButton()
+        }
     }
-
-    initialiseTryAgain() {
-        window.addEventListener('resize', this.resizeCanvas, false);
-        this.resizeCanvas()
-        this.buttonLeave()
-        this.askForHelpButton()
-    }
-
 
     resizeCanvas(){
         canvas.width = window.innerWidth
@@ -159,12 +163,10 @@ class GameBoard {
         parentImages.appendChild(host1)
         parentImages.appendChild(host2)
 
-
         let fewSecondsMessages = document.createElement('h4')
         fewSecondsMessages.innerHTML = 'It may take a few moments...'
         parentMiddlePart.appendChild( fewSecondsMessages)
  
-
         function timeout(){
             setTimeout(function(){
                 let parentContainer = document.getElementById('container')
@@ -175,7 +177,6 @@ class GameBoard {
         }
         timeout()
     }
-
 
     askForHelpButton(){
         let askForHelp =document.getElementById('help-button')
@@ -190,9 +191,9 @@ class GameBoard {
             document.location.reload();
         })
     }
-
 }
 
+//class ironhackers (students or teahcers)
 class Ironhacker {
     constructor(img, isStudent, x, y, speed, width, height){
         this.img = img
@@ -213,6 +214,7 @@ class Ironhacker {
     }
 }
 
+//class countes (lives, levels, missed students, hit teachers)
 class Counter {
     constructor(){
         this.students = 0
@@ -226,7 +228,6 @@ class Counter {
         this.students += 1
         if(this.students % 6 === 0) {
             this.levels += 1
-            let soundLevelUp = new AddSound('./Sounds/levelup.mp3')
             soundLevelUp.play()
         }
     }
@@ -245,12 +246,11 @@ class Counter {
         } else if (isStudent === false){
             if(this.lives >= 2){
                 this.lives -= 2
-            } else {
+            } else if (this.lives === 1) {
                 this.lives -= 1
             }
         } 
-        // let soundLivesDown = new AddSound('./Sounds/livesdown.mp3')
-        // soundLivesDown.play()
+        soundLiveDown.play()
     }
 
     drawLivesCounter(ctx) {
@@ -260,12 +260,13 @@ class Counter {
     }
 
     drawLevelCounter(ctx){
-        ctx.fillStyle = '#f1a725'
+        ctx.fillStyle = '#54c968'
         ctx.font = '22px Slackey'
         ctx.fillText(`Level: ${this.levels}`, window.innerWidth - 120, 50)
     }
 }
 
+//class game
 class Game {
     constructor(){
         this.gameBoard = new GameBoard()
@@ -275,13 +276,12 @@ class Game {
         this.randomIronhackers = []
         this.shuffledIronhackersImgArr
         this.ironhackers = []
+        this.teachersClicked = []
         this.randomImg
-        this.randomSpeed = 2.5 + (Math.random() * 4) 
+        this.randomSpeed = 3.5 + (Math.random() * 3) 
         this.randomX 
         this.randomXArr = []
         this.statusStop = false
-        this.mySound   
-        this.called     
     }
 
     start() {
@@ -324,14 +324,15 @@ class Game {
   
     
     addStudent(){
-        const randomNumber = 0 + Math.floor(Math.random() * 3)
+        const randomNumber = 0 + Math.floor(Math.random() * 7)
         if(randomNumber === 1) {
             this.shuffleIronhackersImgArray(teachersImgArray)
             this.randomImg = this.shuffledIronhackersImgArr[0]
 
             this.randomX =  230 + (Math.random() * (window.innerWidth - 680))
             this.newIronhacker = new Ironhacker(this.randomImg, false, this.randomX, 0, this.randomSpeed, 250, 141)
-            this.ironhackers.push(this.newIronhacker)     
+            this.ironhackers.push(this.newIronhacker) 
+            this.teachersClicked.push(this.newIronhacker)    
         } else {
             this.shuffleIronhackersImgArray(ironhackersImgArray)
         
@@ -349,31 +350,22 @@ class Game {
     
             this.randomX =  30 + (Math.random() * (window.innerWidth - 310))
             this.newIronhacker = new Ironhacker(this.randomImg, true, this.randomX, 0, this.randomSpeed, 250, 141)
-
             this.ironhackers.push(this.newIronhacker)  
         }
-        
     }
-
-    // addTeachers(called){
-    //     this.called = called
-    //     const randomNumber = 0 + Math.floor(Math.random() * 7)
-    //     if(randomNumber === 1) {
-    //         this.shuffleIronhackersImgArray(teachersImgArray)
-    //         this.randomImg = this.shuffledIronhackersImgArr[0]
-
-    //         this.randomX =  230 + (Math.random() * (window.innerWidth - 680))
-    //         this.newIronhacker = new Ironhacker(this.randomImg, false, this.randomX, 0, this.randomSpeed, 250, 141)
-    //         this.ironhackers.push(this.newIronhacker)     
-
-    //         return  this.called === true   
-    //     } 
-    // }
-
 
     updateCounters(ctx){
         this.counterLevels.drawLevelCounter(ctx)
         this.counterLives.drawLivesCounter(ctx)
+
+        this.teachersClicked.forEach((element,index) => {
+            if(element.img.src.indexOf('clicked') >= 0 && element.isStudent === false) {
+                this.counterLives.subtractLives(false)
+                this.counterLives.drawLivesCounter(ctx)
+                this.counterLives.teachersHit()
+                this.teachersClicked.splice(index, 1)
+            }
+        })
 
         this.ironhackers.forEach((element, index) => {
             if(element.y > window.innerHeight -100) {
@@ -386,11 +378,6 @@ class Game {
                     this.counterLives.drawLivesCounter(ctx)
                     this.counterLives.studentsNotHit()
                 } 
-                if (element.img.src.indexOf('clicked') >= 0 && element.isStudent === false) {
-                    this.counterLives.subtractLives(false)
-                    this.counterLives.drawLivesCounter(ctx)
-                    this.counterLives.teachersHit()
-                }
                 this.ironhackers.splice(index, 1)
             }
         })
@@ -399,22 +386,22 @@ class Game {
     moreSpeedEachLevel (){
             switch(this.counterLevels.levels) {
                 case 1:
-                    this.randomSpeed = 3.5 + (Math.random() * 4)
+                    this.randomSpeed = 4.5 + (Math.random() * 3)
                     break;
                 case 2: 
-                    this.randomSpeed = 4.5 + (Math.random() * 4)
+                    this.randomSpeed = 5.5 + (Math.random() * 3)
                     break
                 case 3: 
-                    this.randomSpeed = 5.5 + (Math.random() * 4)
+                    this.randomSpeed = 6.5 + (Math.random() * 3)
                     break
                 case 4: 
-                    this.randomSpeed = 6.5 + (Math.random() * 4)
+                    this.randomSpeed = 7.5 + (Math.random() * 3)
                     break
                 case 5: 
-                    this.randomSpeed = 7.5 + (Math.random() * 4)
+                    this.randomSpeed = 8.5 + (Math.random() * 3)
                     break
                 case 6: 
-                    this.randomSpeed = 8.5 + (Math.random() * 4)
+                    this.randomSpeed = 9.5 + (Math.random() * 3)
                     break
             }
     }
@@ -424,16 +411,25 @@ class Game {
             clearInterval(this.intervalID)
             this.statusStop = true
             soundInBreakoutRoom.stop()
+            soundJorg.stop()
+            soundGuido.stop()
+            soundLevelUp.stop()
+            soundLiveDown.stop()
             this.gameOver(ctx)
-        } else if (this.counterLevels.levels >= 2 && this.counterLevels.students % 5 === 0) {
+        } else if (this.counterLevels.levels >= 6 && this.counterLevels.students % 5 === 0) {
             clearInterval(this.intervalID)
             this.statusStop = true
+            soundInBreakoutRoom.stop()
+            soundJorg.stop()
+            soundGuido.stop()
+            soundLevelUp.stop()
+            soundLiveDown.stop()
             this.winner(ctx)
         } 
     }
 
     gameOver(ctx){
-        const soundGameOver = new AddSound('./Sounds/gemeover.swf.mp3')
+
         soundGameOver.play()
 
         ctx.clearRect(0,0, window.innerWidth, window.innerHeight)
@@ -449,11 +445,22 @@ class Game {
         const title = document.createElement('h2')
         title.innerHTML = 'Game Over' 
         const text = document.createElement('p')
-        text.innerHTML = 'No one said throwing spaghetti was easy..' 
-        const missedStudents = document.createElement('p')
-        missedStudents.innerHTML = `Missed students: ${this.counterLives.missedStudents}`     
-        const hitTeachers = document.createElement('p')
-        hitTeachers.innerHTML = `Hit teachers: ${this.counterLives.hitTeachers}`    
+        text.innerHTML = 'Nobody said it was easy...but OH MY SPAGHETTI.....' 
+        const missedStudents = document.createElement('h4')
+        const hitTeachers = document.createElement('h4')
+
+
+        if(this.counterLives.missedStudents > 0 && this.counterLives.hitTeachers > 0) {
+            missedStudents.innerHTML = `You missed to hit ${this.counterLives.missedStudents} students....`   
+            hitTeachers.innerHTML = `...and on top of that, you hit the teachers ${this.counterLives.hitTeachers} times`  
+        } else if (this.counterLives.missedStudents > 0 && this.counterLives.hitTeachers === 0) {
+            missedStudents.innerHTML = `You missed to hit ${this.counterLives.missedStudents} students....`   
+            hitTeachers.innerHTML = `...but well done, no teachers were harmed in this game ;)`
+        } else if (this.counterLives.missedStudents === 0 && this.counterLives.hitTeachers >0){
+            missedStudents.innerHTML = `Well done hitting all the students...`
+            hitTeachers.innerHTML = `....stop builing the teachers though (${this.counterLives.hitTeachers} times to be precise!)`  
+        }
+         
         gameOverScreen.appendChild(title)
 
 
@@ -463,9 +470,9 @@ class Game {
                 divScores.setAttribute('class', 'div-scores')
                 gameOverScreen.appendChild(divScores)
 
-                gameOverScreen.appendChild(text)
-                gameOverScreen.appendChild(missedStudents)
-                gameOverScreen.appendChild(hitTeachers)
+                divScores.appendChild(text)
+                divScores.appendChild(missedStudents)
+                divScores.appendChild(hitTeachers)
 
                 const divButtons = document.createElement('div')
                 divButtons.setAttribute('id', 'div-buttons')
@@ -476,9 +483,7 @@ class Game {
                 divButtons.appendChild(buttonPlayAgain)
 
                 buttonPlayAgain.addEventListener('click', () => {
-                    document.location.reload();
-                    // this.gameBoard.initialiseTryAgain()
-                    this.inBreakOutRoom()
+                    playAgain()
                 })
 
                 const buttonQuite = document.createElement('button')
@@ -495,6 +500,7 @@ class Game {
     }
     
     winner(ctx){
+        soundWinner.play()
         ctx.clearRect(0,0, window.innerWidth, window.innerHeight)
         this.updateCounters(ctx)
 
@@ -508,13 +514,40 @@ class Game {
         const title = document.createElement('h2')
         title.innerHTML = 'You rock!' 
         const text = document.createElement('p')
-        text.innerHTML = 'Thank you for making us even smarter!' 
-       
-        winnerScreen.appendChild(title)
+        text.innerHTML = 'I can see someone knows how to throw some spaghetti ;) ;) ..... ' 
+        const text3 = document.createElement('h4')
+     
+
+        const missedStudents = document.createElement('h4')
+        const hitTeachers = document.createElement('h4')
+
+        if(this.counterLives.missedStudents > 0 && this.counterLives.missedStudents <= 5 &&  this.counterLives.hitTeachers > 0 && this.counterLives.hitTeachers <=2) {
+            missedStudents.innerHTML = `You missed to hit ${this.counterLives.missedStudents} students....`   
+            hitTeachers.innerHTML = `...and on top of that, you hit the teachers ${this.counterLives.hitTeachers} times...`  
+            text3.innerHTML = '..but hey..who gives a spaghetti...you won!'
+        } else if (this.counterLives.missedStudents > 0 && this.counterLives.missedStudents <= 5 && this.counterLives.hitTeachers === 0) {
+            missedStudents.innerHTML = `As a true champ, you (only) missed to hit ${this.counterLives.missedStudents} students....`   
+            hitTeachers.innerHTML = `...and even better, no teachers were harmed in this game ;)`
+        } else if (this.counterLives.missedStudents === 0 && this.counterLives.hitTeachers <= 2){
+            missedStudents.innerHTML = `Like a real spaghetti royal, you were able to hit all the students...`
+            hitTeachers.innerHTML = `....you were a bit annoying to the teachers though (${this.counterLives.hitTeachers} times to be precise!)`  
+        }
+
     
+        winnerScreen.appendChild(title)
+
         function timeout(){
             setTimeout(function(){
-                winnerScreen.appendChild(text)
+                const divScores = document.createElement('div')
+                divScores.setAttribute('class', 'div-scores')
+                winnerScreen.appendChild(divScores)
+
+                divScores.appendChild(text)
+                // divScores.appendChild(text2)
+                divScores.appendChild(missedStudents)
+                divScores.appendChild(text3)
+                divScores.appendChild(hitTeachers)
+
                 const divButtons = document.createElement('div')
                 divButtons.setAttribute('id', 'div-buttons')
                 winnerScreen.appendChild(divButtons)
@@ -524,9 +557,7 @@ class Game {
                 divButtons.appendChild(buttonPlayAgain)
         
                 buttonPlayAgain.addEventListener('click', () => {
-                    document.location.reload();
-                    // this.gameBoard.initialiseTryAgain()
-                    this.inBreakOutRoom()
+                    playAgain()
                 })
         
                 const buttonQuite = document.createElement('button')
@@ -574,14 +605,11 @@ class Game {
                             ironhacker.img = kenoulyClicked
                             break
                         case jorg: 
-                            let soundJorg= new AddSound('./Sounds/scream.mp3')
                             soundJorg.play()
                             ironhacker.img = jorgClicked
                             img1secBigAfterClick()
                             break
                         case guido: 
-
-                            let soundGuido = new AddSound('./Sounds/mamamia.mp3')
                             soundGuido.play()
                             ironhacker.img = guidoClicked
                             img1secBigAfterClick()
@@ -606,6 +634,7 @@ class Game {
     }
 }
 
+//class add sounds
 class AddSound {
     constructor(src) {
         this.sound = document.createElement("audio");
@@ -615,21 +644,30 @@ class AddSound {
         this.sound.style.display = "none";
         document.body.appendChild(this.sound);
     
-
-    this.play = function(){
-      this.sound.play();
-    }
-    this.stop = function(){
-      this.sound.pause();
-    }
-
+        this.play = function(){
+        this.sound.play();
+        }
+        this.stop = function(){
+        this.sound.pause();
+        }
     }
   }
 
 const game = new Game()
-const soundInBreakoutRoom = new AddSound('./Sounds/title.mp3')
+const nextGame = new Game ()
 
+//sounds
+const soundInBreakoutRoom = new AddSound('./Sounds/gameSoundtrack.mp3')
+const soundLevelUp = new AddSound('./Sounds/levelup.mp3')
+const soundLiveDown = new AddSound('./Sounds/livesdown.mp3')
+const soundJorg= new AddSound('./Sounds/oh-no.mp3')
+const soundGuido = new AddSound('./Sounds/mamamia.mp3')
+const soundGameOver = new AddSound('./Sounds/pac-man-dies.mp3')
+const soundWinner = new AddSound('./Sounds/rescued-kings.mp3')
+
+
+//start game
 game.start()
-// nextGame.start()
+
 
 

@@ -198,6 +198,9 @@ h1 {
 /* gameover & winner screen */
 #gameOver-screen,
 #winner-screen {
+    position: absolute;
+    width: 100%;
+    height: 80%;
     display: flex;
     justify-content: space-evenly;
     flex-direction: column;
@@ -208,25 +211,41 @@ h1 {
 #gameOver-screen h2,
 #winner-screen h2 {
     position: absolute;
-    top:35%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    top: 25%;
     color: #f4829a;
     font-size: 6em;
     font-family: 'Slackey';
     overflow: hidden;
     white-space: nowrap;
     animation: type 2s steps(30, end);
-    /* margin: 35% auto; */
 }
 
-#winner-screen p {
+.div-scores {
     position: absolute;
-    top: 43%;
+    top: 50%;
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+}
+
+.div-scores p {
+    font-family: 'Open Sans';
+    font-size: 2.2vh;
+    color: gray;
+    padding-bottom: 60px;
+    text-align: center;
+}
+
+.div-scores h4 {
     font-family: 'Open Sans';
     font-size: 2vh;
     color: gray;
+    padding-bottom: 20px;
+    text-align: center;
 }
+
 
 #div-buttons {
     position: absolute;
@@ -234,21 +253,21 @@ h1 {
     width: 100%;
     justify-content: center;
     align-items: center;
-    top: 50%;
-    margin: 0 auto;
+    top: 70%;
+    margin-top: 70px;
 }
 
 #gameOver-screen button,
 #winner-screen button {
     font-family: 'Open Sans';
-    font-size: 1.5em;
+    font-size: 1.2em;
     background-color: transparent;
     border: 1px solid #f4829a;
     padding: 15px 30px;
     border-radius: 30px;
     text-decoration:  none;
     width: 200px;
-    margin-right:  10px;
+    margin-right:  15px;
 }
 
 #gameOver-screen button:first-child,
