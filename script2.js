@@ -62,7 +62,6 @@ jorgIntro.src = './images/introductionJorg.png'
 const guidoIntro = new Image()
 guidoIntro.src =  './images/introductionGuido.png'
 
-
 // canvas and ctx
 const canvas = document.getElementById('canvas')
 const ctx = canvas.getContext('2d')
@@ -73,11 +72,13 @@ function playAgain(){
     window.location.reload(false);
 }
 
+
 // class game board
 class GameBoard {
-    constructor() {
+    constructor(status) {
         this.width = canvas.width
         this.height = canvas.height
+        this.status = status
     }
 
     initialise() {
@@ -90,6 +91,8 @@ class GameBoard {
             this.askForHelpButton()
             this.reactionsButton()
             this.screenSharingButton()
+            this.participantsButton()
+            this.noVideoButton()
         } else {
             sessionStorage.clear()
             this.startScreen()
@@ -97,6 +100,9 @@ class GameBoard {
             this.askForHelpButton()
             this.reactionsButton()
             this.screenSharingButton()
+            this.participantsButton()
+            this.noVideoButton()
+
         }
     }
 
@@ -179,6 +185,43 @@ class GameBoard {
              }, 2000)
         }
         timeout()
+    }
+
+    selfView(){
+        if (this.status === true ){
+            const selfViewDiv = document.createElement('div')
+            selfViewDiv.setAttribute('id', 'self-view')
+        
+            const divBefore = document.getElementsByClassName('game-border-top')[0]
+            const parentContainer = document.getElementById('container')
+            parentContainer.insertBefore(selfViewDiv, divBefore)
+        
+            const parentGameRoom= document.getElementById('self-view')
+            const playerSelfView = document.createElement('img')
+            playerSelfView.setAttribute('id', 'img-player')
+            playerSelfView.src = './images/selfViewkopie.png'
+    
+            parentGameRoom.appendChild(playerSelfView)
+        } else if (this.status === false) {
+            const parentGameRoom= document.getElementById('self-view')
+            const playerImg = document.getElementById('img-player')
+            parentGameRoom.removeChild(playerImg)
+        }
+    }
+
+    noVideoButton(){
+        const stopVideo =document.getElementById('stop-video')
+        stopVideo.addEventListener('click', () => {
+            this.status = false 
+            // this.selfView()
+        })
+    }
+
+    participantsButton(){
+        const screenSharing =document.getElementById('screen-sharing-button')
+        screenSharing.addEventListener('click', () => {
+            alert("");
+        })
     }
 
     screenSharingButton(){
@@ -307,6 +350,10 @@ class Game {
 
     inBreakOutRoom(){
         soundInBreakoutRoom.play()
+        this.gameBoard.status = true
+        this.gameBoard.selfView()
+
+        console.log(this.gameBoard.status)
         requestAnimationFrame(this.gameLoop.bind(this))
         this.intervalID = window.setInterval(this.addStudent.bind(this), 1000)
     }
@@ -446,7 +493,11 @@ class Game {
     }
 
     gameOver(ctx){
-
+        if(this.gameBoard.status === true) {
+            this.gameBoard.status = false
+        } 
+        this.gameBoard.selfView()
+     
         soundGameOver.play()
 
         ctx.clearRect(0,0, window.innerWidth, window.innerHeight)
@@ -523,6 +574,8 @@ class Game {
     }
     
     winner(ctx){
+
+
         soundWinner.play()
         ctx.clearRect(0,0, window.innerWidth, window.innerHeight)
         this.updateCounters(ctx)
@@ -537,7 +590,7 @@ class Game {
         const title = document.createElement('h2')
         title.innerHTML = 'You rock!' 
         const text = document.createElement('p')
-        text.innerHTML = 'I can see someone knows how to throw some spaghetti ;) ;) ..... ' 
+        text.innerHTML = 'I can see somebody knows how to throw some spaghetti ;) ;) ..... ' 
         const text3 = document.createElement('h4')
      
 
@@ -577,7 +630,6 @@ class Game {
                 winnerScreen.appendChild(divScores)
 
                 divScores.appendChild(text)
-                // divScores.appendChild(text2)
                 divScores.appendChild(missedStudents)
                 divScores.appendChild(hitTeachers)
                 divScores.appendChild(text3)

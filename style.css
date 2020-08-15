@@ -95,7 +95,7 @@ h1 {
     border: 1.5px solid #54c968;
     padding: 15px 30px;
     color: #54c968;
-    font-weight: 400;
+    font-weight: 500;
     border-radius: 30px;
     text-decoration:  none;
 }
@@ -162,7 +162,7 @@ h1 {
 .game-border-bottom{
     background-color: #47b7b9;
     color: whitesmoke;
-    font-size: 0.7rem;
+    font-size: 1.1rem;
     text-align: center;
     height: 76px;
     display: flex;
@@ -204,6 +204,14 @@ h1 {
 
 #first-icons img{
     padding: 0 10px 0 16px;
+}
+
+/* self view player */
+#self-view img {
+    position: absolute;
+    width: 25vw;
+    top: 60%;
+    left: 74%
 }
 
 /* gameover & winner screen */
