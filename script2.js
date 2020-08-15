@@ -88,11 +88,15 @@ class GameBoard {
             game.inBreakOutRoom()
             this.buttonLeave()
             this.askForHelpButton()
+            this.reactionsButton()
+            this.screenSharingButton()
         } else {
             sessionStorage.clear()
             this.startScreen()
             this.buttonLeave()
             this.askForHelpButton()
+            this.reactionsButton()
+            this.screenSharingButton()
         }
     }
 
@@ -109,26 +113,26 @@ class GameBoard {
         const parentContainer = document.getElementById('container')
         parentContainer.insertBefore(startScreen, divBefore)
 
-
         const parentStartScreen = document.getElementById('start-screen')
         const middlepart = document.createElement('div')
         parentStartScreen.appendChild(middlepart)
         middlepart.setAttribute('id', 'middle-part')
+
         const titelGame = document.createElement('h1')
-        titelGame.innerHTML = 'Hit me, Spaghetti, one more time...'
+        titelGame.innerHTML = 'Hit me, <span>Spaghetti</span>,' + '</br>' + 'one more time...'
         const parentMiddlePart= document.getElementById('middle-part')
         parentMiddlePart.appendChild(titelGame)
 
-        const explanationText1 = document.createElement('p')
-        const explanationText2 = document.createElement('p')
-        const explanationText3 = document.createElement('h3')
-        explanationText1.innerHTML = 'In a Breakout Room far far away......six brave students gave up their summer.....and autumn.....to become the next best coding ninjas.' 
-        explanationText2.innerHTML = 'Since teaching is like throwing spaghetti and hoping some will stick (read: quote teacher)......all you have to do is to throw as much spaghetti at the students as you can. But BE AWARE.....once in a while the teacher and teacher assistant join the Breakout Room......and as you might guess......hitting them will get you into trouble!!'
-        explanationText3.innerHTML = '[You can throw spaghetti by clicking with your mouse]'
+        const explanationText = document.createElement('p')      
+        const gameMechanicsExpl = document.createElement('p')
+        explanationText.innerHTML = 'In a Breakout Room far far away......6 brave students gave up their summer.....and autumn.....to become the next best coding ninjas.' + '</br>' +  '</br>' + 'Since teaching is like throwing spaghetti and hoping some will stick (read: quote teacher)......all you have to do is to throw as much spaghetti at the students as you can. But <i>BE AWARE</i>.....once in a while the teacher and teacher assistant join the Breakout Room......and as you might guess......hitting them will get you into trouble!!'
        
-        parentMiddlePart.appendChild(explanationText1)
-        parentMiddlePart.appendChild(explanationText2)
-        parentMiddlePart.appendChild(explanationText3)
+        gameMechanicsExpl.innerHTML = '<span><i>Game mechanics</i></span>' + '</br>' +  '<span>//</span> Make it to the end of level 6 to win <span>//</span>  Click with your mouse to throw spaghetti <span>//</span> ' + '</br>' + '<span>//</span> Student not hit =  1 life lost <span>//</span>  Teacher hit = 2 lives lost <span>//</span> '
+
+
+        parentMiddlePart.appendChild(explanationText)
+        parentMiddlePart.appendChild(gameMechanicsExpl)
+
 
         const button = document.createElement('button')
         button.innerHTML = 'Join Breakout Room'
@@ -136,41 +140,40 @@ class GameBoard {
 
         button.addEventListener('click', () => {
             parentMiddlePart.removeChild(titelGame)
-            parentMiddlePart.removeChild(explanationText1)
-            parentMiddlePart.removeChild(explanationText2)
-            parentMiddlePart.removeChild(explanationText3)
+            parentMiddlePart.removeChild(explanationText)
+            parentMiddlePart.removeChild(gameMechanicsExpl)
             parentMiddlePart.removeChild(button)
             this.breakoutRoomLoading()
         })
     }
 
     breakoutRoomLoading(){
-        let joinBreakoutRoom = document.createElement('h2')
+        const joinBreakoutRoom = document.createElement('h2')
         joinBreakoutRoom.innerHTML = 'Please wait, the hosts will let you in soon.'
-        let parentMiddlePart = document.getElementById('middle-part')
+        const parentMiddlePart = document.getElementById('middle-part')
         parentMiddlePart.appendChild(joinBreakoutRoom)
 
-        let divImages = document.createElement('div')
+        const divImages = document.createElement('div')
         divImages.setAttribute('id', 'div-images')
         parentMiddlePart.appendChild(divImages)
 
-        let host1 = document.createElement('img')
+        const host1 = document.createElement('img')
         host1.src = './images/introductionJorg.png'
-        let host2 = document.createElement('img')
+        const host2 = document.createElement('img')
         host2.src = './images/introductionGuido.png'
 
-        let parentImages = document.getElementById('div-images')
+        const parentImages = document.getElementById('div-images')
         parentImages.appendChild(host1)
         parentImages.appendChild(host2)
 
-        let fewSecondsMessages = document.createElement('h4')
+        const fewSecondsMessages = document.createElement('h4')
         fewSecondsMessages.innerHTML = 'It may take a few moments...'
         parentMiddlePart.appendChild( fewSecondsMessages)
  
         function timeout(){
             setTimeout(function(){
-                let parentContainer = document.getElementById('container')
-                let startScreen = document.getElementById('start-screen')
+                const parentContainer = document.getElementById('container')
+                const startScreen = document.getElementById('start-screen')
                 parentContainer.removeChild(startScreen)
                 game.inBreakOutRoom()
              }, 2000)
@@ -178,15 +181,29 @@ class GameBoard {
         timeout()
     }
 
+    screenSharingButton(){
+        const screenSharing =document.getElementById('screen-sharing-button')
+        screenSharing.addEventListener('click', () => {
+            alert("Screen sharing denied. No one want to see your screen.....");
+        })
+    }
+
     askForHelpButton(){
-        let askForHelp =document.getElementById('help-button')
+        const askForHelp =document.getElementById('help-button')
         askForHelp.addEventListener('click', () => {
-            alert("Sorry, no help available...don't worry...you can do this!!");
+            alert("Sorry, no help available...but don't worry...you can do this!!");
+        })
+    }
+
+    reactionsButton(){
+        const reactions = document.getElementById('reactions-button')
+        reactions.addEventListener('click', () => {
+            alert("Thank you for your reaction. You are awesome too ;)!");
         })
     }
 
     buttonLeave(){
-        let buttonLeave = document.getElementById('leave-button')
+        const buttonLeave = document.getElementById('leave-button')
         buttonLeave.addEventListener('click', () => {
             document.location.reload();
         })
@@ -450,15 +467,21 @@ class Game {
         const hitTeachers = document.createElement('h4')
 
 
-        if(this.counterLives.missedStudents > 0 && this.counterLives.hitTeachers > 0) {
-            missedStudents.innerHTML = `You missed to hit ${this.counterLives.missedStudents} students....`   
-            hitTeachers.innerHTML = `...and on top of that, you hit the teachers ${this.counterLives.hitTeachers} times`  
+        if(this.counterLives.missedStudents > 1 && this.counterLives.hitTeachers > 1) {
+            missedStudents.innerHTML = `You missed to hit <span>${this.counterLives.missedStudents}</span>  students....`   
+            hitTeachers.innerHTML = `...and on top of that, you hit the teachers <span>${this.counterLives.hitTeachers}</span> times`  
+        } else if (this.counterLives.missedStudents === 1 && this.counterLives.hitTeachers > 1 ) {
+            missedStudents.innerHTML = `You missed to hit <span>${this.counterLives.missedStudents}</span> student....`   
+            hitTeachers.innerHTML = `...and on top of that, you hit the teachers <span>${this.counterLives.hitTeachers}</span> times`  
+        } else if (this.counterLives.missedStudents > 1 && this.counterLives.hitTeachers === 1 ) {
+            missedStudents.innerHTML = `You missed to hit <span>${this.counterLives.missedStudents}</span> students....`   
+            hitTeachers.innerHTML = `...and on top of that, you hit <span>${this.counterLives.hitTeachers} </span>of the teachers` 
         } else if (this.counterLives.missedStudents > 0 && this.counterLives.hitTeachers === 0) {
-            missedStudents.innerHTML = `You missed to hit ${this.counterLives.missedStudents} students....`   
-            hitTeachers.innerHTML = `...but well done, no teachers were harmed in this game ;)`
+            missedStudents.innerHTML = `You missed to hit <span>${this.counterLives.missedStudents}</span> students....`   
+            hitTeachers.innerHTML = `...but well done, <span>no</span> teachers were harmed in this game ;)`
         } else if (this.counterLives.missedStudents === 0 && this.counterLives.hitTeachers >0){
-            missedStudents.innerHTML = `Well done hitting all the students...`
-            hitTeachers.innerHTML = `....stop builing the teachers though (${this.counterLives.hitTeachers} times to be precise!)`  
+            missedStudents.innerHTML = `Well done hitting  <span>all</span> the students...`
+            hitTeachers.innerHTML = `....stop builing the teachers though (<span>${this.counterLives.hitTeachers}</span> times to be precise!)`  
         }
          
         gameOverScreen.appendChild(title)
@@ -521,16 +544,27 @@ class Game {
         const missedStudents = document.createElement('h4')
         const hitTeachers = document.createElement('h4')
 
-        if(this.counterLives.missedStudents > 0 && this.counterLives.missedStudents <= 5 &&  this.counterLives.hitTeachers > 0 && this.counterLives.hitTeachers <=2) {
-            missedStudents.innerHTML = `You missed to hit ${this.counterLives.missedStudents} students....`   
-            hitTeachers.innerHTML = `...and on top of that, you hit the teachers ${this.counterLives.hitTeachers} times...`  
+        if(this.counterLives.missedStudents > 0 && this.counterLives.missedStudents <= 1 &&  this.counterLives.hitTeachers > 1 && this.counterLives.hitTeachers <=2) {
+            missedStudents.innerHTML = `You missed to hit <span>${this.counterLives.missedStudents}</span> student though....`   
+            hitTeachers.innerHTML = `...and on top of that, you hit the teachers <span>${this.counterLives.hitTeachers}</span> times...`  
             text3.innerHTML = '..but hey..who gives a spaghetti...you won!'
-        } else if (this.counterLives.missedStudents > 0 && this.counterLives.missedStudents <= 5 && this.counterLives.hitTeachers === 0) {
-            missedStudents.innerHTML = `As a true champ, you (only) missed to hit ${this.counterLives.missedStudents} students....`   
-            hitTeachers.innerHTML = `...and even better, no teachers were harmed in this game ;)`
+        }else if (this.counterLives.missedStudents > 1 && this.counterLives.missedStudents <= 5 &&  this.counterLives.hitTeachers > 1 && this.counterLives.hitTeachers <=2) {
+            missedStudents.innerHTML = `You missed to hit <span>${this.counterLives.missedStudents}</span>  students though....`   
+            hitTeachers.innerHTML = `...and on top of that, you hit the teachers <span>${this.counterLives.hitTeachers}</span>  times...`  
+            text3.innerHTML = '..but hey..who gives a spaghetti...you won!'
+        }else if (this.counterLives.missedStudents > 1 && this.counterLives.missedStudents <= 5 &&  this.counterLives.hitTeachers > 0 && this.counterLives.hitTeachers <=1) {
+            missedStudents.innerHTML = `You missed to hit <span>${this.counterLives.missedStudents}</span>  students though....`   
+            hitTeachers.innerHTML = `...and on top of that, you hit <span>${this.counterLives.hitTeachers}</span>  of the teachers...`  
+            text3.innerHTML = '..but hey..who gives a spaghetti...you won!'
+        } else if (this.counterLives.missedStudents > 0 && this.counterLives.missedStudents <= 1 && this.counterLives.hitTeachers === 0) {
+            missedStudents.innerHTML = `As a true champ, you (only) missed to hit <span>${this.counterLives.missedStudents}</span> student....`   
+            hitTeachers.innerHTML = `...and even better, <span>no</span>teachers were harmed in this game ;)`
+        } else if (this.counterLives.missedStudents > 1 && this.counterLives.missedStudents <= 5 && this.counterLives.hitTeachers === 0) {
+                missedStudents.innerHTML = `As a true champ, you (only) missed to hit <span>${this.counterLives.missedStudents}</span>  students....`   
+                hitTeachers.innerHTML = `...and even better, <span>no</span> teachers were harmed in this game ;)`
         } else if (this.counterLives.missedStudents === 0 && this.counterLives.hitTeachers <= 2){
-            missedStudents.innerHTML = `Like a real spaghetti royal, you were able to hit all the students...`
-            hitTeachers.innerHTML = `....you were a bit annoying to the teachers though (${this.counterLives.hitTeachers} times to be precise!)`  
+            missedStudents.innerHTML = `Like a real spaghetti royal, you were able to hit <span>all</span> the students...`
+            hitTeachers.innerHTML = `....you were a bit annoying to the teachers though (<span>${this.counterLives.hitTeachers}</span>  time(s) to be precise!)`  
         }
 
     
@@ -545,8 +579,8 @@ class Game {
                 divScores.appendChild(text)
                 // divScores.appendChild(text2)
                 divScores.appendChild(missedStudents)
-                divScores.appendChild(text3)
                 divScores.appendChild(hitTeachers)
+                divScores.appendChild(text3)
 
                 const divButtons = document.createElement('div')
                 divButtons.setAttribute('id', 'div-buttons')
@@ -657,7 +691,7 @@ const game = new Game()
 const nextGame = new Game ()
 
 //sounds
-const soundInBreakoutRoom = new AddSound('./Sounds/gameSoundtrack.mp3')
+const soundInBreakoutRoom = new AddSound('./Sounds/gameSoundtrack-loop.mp3')
 const soundLevelUp = new AddSound('./Sounds/levelup.mp3')
 const soundLiveDown = new AddSound('./Sounds/livesdown.mp3')
 const soundJorg= new AddSound('./Sounds/oh-no.mp3')
