@@ -75,10 +75,10 @@ function playAgain(){
 
 // class game board
 class GameBoard {
-    constructor(status) {
+    constructor() {
         this.width = canvas.width
         this.height = canvas.height
-        this.status = status
+        this.status = true
     }
 
     initialise() {
@@ -102,7 +102,6 @@ class GameBoard {
             this.screenSharingButton()
             this.participantsButton()
             this.noVideoButton()
-
         }
     }
 
@@ -187,33 +186,44 @@ class GameBoard {
         timeout()
     }
 
-    selfView(){
-        if (this.status === true ){
-            const selfViewDiv = document.createElement('div')
-            selfViewDiv.setAttribute('id', 'self-view')
-        
-            const divBefore = document.getElementsByClassName('game-border-top')[0]
-            const parentContainer = document.getElementById('container')
-            parentContainer.insertBefore(selfViewDiv, divBefore)
-        
-            const parentGameRoom= document.getElementById('self-view')
-            const playerSelfView = document.createElement('img')
-            playerSelfView.setAttribute('id', 'img-player')
-            playerSelfView.src = './images/selfViewkopie.png'
+    selfViewOn(){
+        const selfViewDiv = document.createElement('div')
+        selfViewDiv.setAttribute('id', 'self-view')
     
-            parentGameRoom.appendChild(playerSelfView)
-        } else if (this.status === false) {
-            const parentGameRoom= document.getElementById('self-view')
-            const playerImg = document.getElementById('img-player')
-            parentGameRoom.removeChild(playerImg)
-        }
+        const divBefore = document.getElementsByClassName('game-border-top')[0]
+        const parentContainer = document.getElementById('container')
+        parentContainer.insertBefore(selfViewDiv, divBefore)
+    
+        const parentGameRoom= document.getElementById('self-view')
+        const playerSelfView = document.createElement('img')
+        playerSelfView.setAttribute('id', 'img-player')
+        playerSelfView.src = './images/selfViewkopie.png'
+
+        const buttonVideo = document.getElementById('stop-video')
+        buttonVideo.src = './icons/stop video.png'
+
+        parentGameRoom.appendChild(playerSelfView)
+        return this.status = true
+    }
+
+    selfviewOff(){
+        const parentGameRoom= document.getElementById('self-view')
+        const playerImg = document.getElementById('img-player')
+        parentGameRoom.removeChild(playerImg)
+
+        const buttonVideo = document.getElementById('stop-video')
+        buttonVideo.src = './icons/stop video stop.png'
+        return this.status = false
     }
 
     noVideoButton(){
         const stopVideo =document.getElementById('stop-video')
         stopVideo.addEventListener('click', () => {
-            this.status = false 
-            // this.selfView()
+            if(this.status === true) {
+                this.selfviewOff()
+            } else {
+                this.selfViewOn()
+            }
         })
     }
 
@@ -351,7 +361,9 @@ class Game {
     inBreakOutRoom(){
         soundInBreakoutRoom.play()
         this.gameBoard.status = true
-        this.gameBoard.selfView()
+        if(this.gameBoard.status){
+            this.gameBoard.selfViewOn()
+        }
 
         console.log(this.gameBoard.status)
         requestAnimationFrame(this.gameLoop.bind(this))
@@ -479,6 +491,11 @@ class Game {
             soundGuido.stop()
             soundLevelUp.stop()
             soundLiveDown.stop()
+            console.log(this.gameBoard.status)
+            if(this.gameBoard.status === true){
+                console.log(this.gameBoard.status)
+                this.gameBoard.selfviewOff()
+            }
             this.gameOver(ctx)
         } else if (this.counterLevels.levels >= 6 && this.counterLevels.students % 5 === 0) {
             clearInterval(this.intervalID)
@@ -488,15 +505,19 @@ class Game {
             soundGuido.stop()
             soundLevelUp.stop()
             soundLiveDown.stop()
+            if(this.gameBoard.status === true){
+                console.log(this.gameBoard.status)
+                this.gameBoard.selfviewOff()
+            }
             this.winner(ctx)
         } 
     }
 
     gameOver(ctx){
-        if(this.gameBoard.status === true) {
-            this.gameBoard.status = false
-        } 
-        this.gameBoard.selfView()
+        // if(this.gameBoard.status === true) {
+        //     this.gameBoard.status = false
+        // } 
+        // this.gameBoard.selfView()
      
         soundGameOver.play()
 
