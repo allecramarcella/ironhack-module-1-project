@@ -1,21 +1,21 @@
 // images Ironhackers
 const marcella = new Image()
-marcella.src = './images/Marcella.png'
+marcella.src = './images/marcella.png'
 
 const yuka = new Image()
-yuka.src = './images/Yuka.png'
+yuka.src = './images/yuka.png'
 
 const lisette = new Image()
-lisette.src = './images/Lisette.png'
+lisette.src = './images/lisette.png'
 
 const anna = new Image()
-anna.src = './images/Anna.png'
+anna.src = './images/anna.png'
 
 const mahmut = new Image()
-mahmut.src = './images/Mahmut.png'
+mahmut.src = './images/mahmut.png'
 
 const kenouly = new Image()
-kenouly.src = './images/Kenouly.png'
+kenouly.src = './images/kenouly.png'
 
 const ironhackersImgArray = [marcella, yuka, lisette, anna, mahmut, kenouly]
 
