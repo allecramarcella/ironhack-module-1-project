@@ -78,7 +78,8 @@ class GameBoard {
     constructor() {
         this.width = canvas.width
         this.height = canvas.height
-        this.status = true
+        this.statusSelfView = true
+        this.statusSound = true
     }
 
     initialise() {
@@ -87,22 +88,16 @@ class GameBoard {
         if (sessionStorage.getItem('reloading') === "false") {
             sessionStorage.clear()
             game.inBreakOutRoom()
-            this.buttonLeave()
-            this.askForHelpButton()
-            this.reactionsButton()
-            this.screenSharingButton()
-            this.participantsButton()
-            this.noVideoButton()
         } else {
             sessionStorage.clear()
             this.startScreen()
-            this.buttonLeave()
-            this.askForHelpButton()
-            this.reactionsButton()
-            this.screenSharingButton()
-            this.participantsButton()
-            this.noVideoButton()
         }
+        this.buttonLeave()
+        this.askForHelpButton()
+        this.reactionsButton()
+        this.screenSharingButton()
+        this.noVideoButton()
+        this.noSoundbutton()
     }
 
     resizeCanvas(){
@@ -186,6 +181,24 @@ class GameBoard {
         timeout()
     }
 
+    noSoundbutton(){
+        const buttonMute = document.getElementById('sound-icon')
+        const textMute = document.getElementById('sound-text')
+        buttonMute.addEventListener('click', () => {
+            if(this.statusSound === true) {
+                soundInBreakoutRoom.stop()
+                this.statusSound = false
+                buttonMute.src = './icons/mute stop.png'
+                textMute.innerHTML = 'Unmute'
+            } else {
+                soundInBreakoutRoom.play()
+                this.statusSound = true
+                buttonMute.src = './icons/mute.png'
+                textMute.innerHTML = 'Mute'
+            }
+        })
+    }
+
     selfViewOn(){
         const selfViewDiv = document.createElement('div')
         selfViewDiv.setAttribute('id', 'self-view')
@@ -199,11 +212,11 @@ class GameBoard {
         playerSelfView.setAttribute('id', 'img-player')
         playerSelfView.src = './images/selfViewkopie.png'
 
-        const buttonVideo = document.getElementById('stop-video')
+        const buttonVideo = document.getElementById('video-icon')
         buttonVideo.src = './icons/stop video.png'
 
         parentGameRoom.appendChild(playerSelfView)
-        return this.status = true
+        return this.statusSelfView = true
     }
 
     selfviewOff(){
@@ -211,26 +224,22 @@ class GameBoard {
         const playerImg = document.getElementById('img-player')
         parentGameRoom.removeChild(playerImg)
 
-        const buttonVideo = document.getElementById('stop-video')
+        const buttonVideo = document.getElementById('video-icon')
         buttonVideo.src = './icons/stop video stop.png'
-        return this.status = false
+        return this.statusSelfView = false
     }
 
     noVideoButton(){
-        const stopVideo =document.getElementById('stop-video')
-        stopVideo.addEventListener('click', () => {
-            if(this.status === true) {
+        const buttonStopVideo =document.getElementById('video-icon')
+        const textStopVideo = document.getElementById('video-text')
+        buttonStopVideo.addEventListener('click', () => {
+            if(this.statusSelfView === true) {
                 this.selfviewOff()
+                textStopVideo.innerHTML = 'Start video'
             } else {
                 this.selfViewOn()
+                textStopVideo.innerHTML = 'Stop video'
             }
-        })
-    }
-
-    participantsButton(){
-        const screenSharing =document.getElementById('screen-sharing-button')
-        screenSharing.addEventListener('click', () => {
-            alert("");
         })
     }
 
@@ -360,12 +369,8 @@ class Game {
 
     inBreakOutRoom(){
         soundInBreakoutRoom.play()
-        this.gameBoard.status = true
-        if(this.gameBoard.status){
-            this.gameBoard.selfViewOn()
-        }
+        this.gameBoard.selfViewOn()
 
-        console.log(this.gameBoard.status)
         requestAnimationFrame(this.gameLoop.bind(this))
         this.intervalID = window.setInterval(this.addStudent.bind(this), 1000)
     }
@@ -491,9 +496,7 @@ class Game {
             soundGuido.stop()
             soundLevelUp.stop()
             soundLiveDown.stop()
-            console.log(this.gameBoard.status)
-            if(this.gameBoard.status === true){
-                console.log(this.gameBoard.status)
+            if(this.gameBoard.statusSelfView === true){
                 this.gameBoard.selfviewOff()
             }
             this.gameOver(ctx)
@@ -505,8 +508,7 @@ class Game {
             soundGuido.stop()
             soundLevelUp.stop()
             soundLiveDown.stop()
-            if(this.gameBoard.status === true){
-                console.log(this.gameBoard.status)
+            if(this.gameBoard.statusSelfView === true){
                 this.gameBoard.selfviewOff()
             }
             this.winner(ctx)
@@ -514,11 +516,6 @@ class Game {
     }
 
     gameOver(ctx){
-        // if(this.gameBoard.status === true) {
-        //     this.gameBoard.status = false
-        // } 
-        // this.gameBoard.selfView()
-     
         soundGameOver.play()
 
         ctx.clearRect(0,0, window.innerWidth, window.innerHeight)
@@ -595,8 +592,6 @@ class Game {
     }
     
     winner(ctx){
-
-
         soundWinner.play()
         ctx.clearRect(0,0, window.innerWidth, window.innerHeight)
         this.updateCounters(ctx)
@@ -755,7 +750,7 @@ class AddSound {
         this.sound.play();
         }
         this.stop = function(){
-        this.sound.pause();
+        this.sound.pause(); 
         }
     }
   }

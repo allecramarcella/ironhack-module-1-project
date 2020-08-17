@@ -209,9 +209,9 @@ h1 {
 /* self view player */
 #self-view img {
     position: absolute;
-    width: 25vw;
-    top: 60%;
-    left: 74%
+    width: 300px;
+    bottom: 100px;
+    right: 20px;
 }
 
 /* gameover & winner screen */
