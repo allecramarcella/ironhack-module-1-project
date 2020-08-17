@@ -55,12 +55,6 @@ jorgClicked.src = './images/jorgclicked.png'
 const guidoClicked = new Image()
 guidoClicked.src =  './images/guidoclicked.png'
 
-//introduction pictures teachers
-const jorgIntro = new Image()
-jorgIntro.src = './images/introductionJorg.png'
-
-const guidoIntro = new Image()
-guidoIntro.src =  './images/introductionGuido.png'
 
 // canvas and ctx
 const canvas = document.getElementById('canvas')
@@ -160,7 +154,7 @@ class GameBoard {
         const host1 = document.createElement('img')
         host1.src = './images/introductionJorg.png'
         const host2 = document.createElement('img')
-        host2.src = './images/introductionGuido.png'
+        host2.src = './images/IntroductionGuido.png'
 
         const parentImages = document.getElementById('div-images')
         parentImages.appendChild(host1)
