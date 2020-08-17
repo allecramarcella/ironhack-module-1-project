@@ -204,7 +204,7 @@ class GameBoard {
         const parentGameRoom= document.getElementById('self-view')
         const playerSelfView = document.createElement('img')
         playerSelfView.setAttribute('id', 'img-player')
-        playerSelfView.src = './images/selfView.png'
+        playerSelfView.src = './images/selfViewkopie.png'
 
         const buttonVideo = document.getElementById('video-icon')
         buttonVideo.src = './icons/stop video.png'
