@@ -21,10 +21,10 @@ const ironhackersImgArray = [marcella, yuka, lisette, anna, mahmut, kenouly]
 
 // images teachers
 const jorg = new Image()
-jorg.src = './images/jorg.png'
+jorg.src = './images/Jorg.png'
 
 const guido = new Image()
-guido.src = './images/guido.png'
+guido.src = './images/Guido.png'
 
 const teachersImgArray = [guido, jorg]
 
