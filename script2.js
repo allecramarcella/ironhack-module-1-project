@@ -154,7 +154,7 @@ class GameBoard {
         const host1 = document.createElement('img')
         host1.src = './images/introductionJorg.png'
         const host2 = document.createElement('img')
-        host2.src = './images/IntroductionGuido.png'
+        host2.src = './images/introductionGuido.png'
 
         const parentImages = document.getElementById('div-images')
         parentImages.appendChild(host1)
