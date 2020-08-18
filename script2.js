@@ -623,11 +623,14 @@ class Game {
             missedStudents.innerHTML = `As a true champ, you (only) missed to hit <span>${this.counterLives.missedStudents}</span> student....`   
             hitTeachers.innerHTML = `...and even better, <span>no</span>teachers were harmed in this game ;)`
         } else if (this.counterLives.missedStudents > 1 && this.counterLives.missedStudents <= 5 && this.counterLives.hitTeachers === 0) {
-                missedStudents.innerHTML = `As a true champ, you (only) missed to hit <span>${this.counterLives.missedStudents}</span>  students....`   
-                hitTeachers.innerHTML = `...and even better, <span>no</span> teachers were harmed in this game ;)`
+            missedStudents.innerHTML = `As a true champ, you (only) missed to hit <span>${this.counterLives.missedStudents}</span>  students....`   
+            hitTeachers.innerHTML = `...and even better, <span>no</span> teachers were harmed in this game ;)`
         } else if (this.counterLives.missedStudents === 0 && this.counterLives.hitTeachers <= 2){
             missedStudents.innerHTML = `Like a real spaghetti royal, you were able to hit <span>all</span> the students...`
             hitTeachers.innerHTML = `....you were a bit annoying to the teachers though (<span>${this.counterLives.hitTeachers}</span>  time(s) to be precise!)`  
+        } else if (this.counterLives.missedStudents === 0 && this.counterLives.hitTeachers <= 2) {
+            missedStudents.innerHTML = `Like a real spaghetti royal, you were able to hit <span>all</span> the students...`
+            hitTeachers.innerHTML = `....and <span>no</span> teachers were harmed in this game, well done!!`
         }
 
     
