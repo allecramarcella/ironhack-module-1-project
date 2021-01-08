@@ -79,7 +79,7 @@ class GameBoard {
     initialise() {
         window.addEventListener('resize', this.resizeCanvas, false);
         this.resizeCanvas()
-        if (sessionStorage.getItem('reloading' === "false") {
+        if (sessionStorage.getItem('reloading') === "false") {
             sessionStorage.clear()
             game.inBreakOutRoom()
         } else {
